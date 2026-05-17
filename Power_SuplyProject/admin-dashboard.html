@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>PowerSupply — Admin Panel</title>
+<link rel="icon" type="image/png" href="logo.png">
+<link rel="stylesheet" href="admin.css">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=Orbitron:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+<!-- ══════════════════ ADMIN AUTH GATE ══════════════════ -->
+<div id="adminGate">
+  <div class="admin-login-card">
+    <div class="alc-header">
+      <div class="admin-logo">
+        <div class="admin-hex">⚙</div>
+        <span class="admin-brand">ADMIN PANEL</span>
+      </div>
+      <div class="alc-title">Administrator Access</div>
+      <div class="alc-sub">PowerSupply System — Restricted Area</div>
+    </div>
+    <div class="alc-body">
+      <div class="alc-err" id="adminLoginErr">Invalid admin credentials</div>
+      <div class="aaf">
+        <label>Admin Username</label>
+        <div class="aai-w"><span class="aaicon">👤</span><input class="admin-input" type="text" id="adminUser" placeholder="admin"/></div>
+      </div>
+      <div class="aaf">
+        <label>Admin Password</label>
+        <div class="aai-w"><span class="aaicon">🔐</span><input class="admin-input" type="password" id="adminPass" placeholder="Enter admin password"/></div>
+      </div>
+      <button class="admin-login-btn" onclick="adminLogin()">⚙ Login to Admin Panel</button>
+      <div class="alc-hint">Dont have an account? <a class="create" href="admin-register.html">Craete</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ SIDEBAR ══════════════════ -->
+<aside class="sidebar" id="adminSidebar">
+  <div class="sb-brand">
+    <div class="sb-hex-admin">⚙</div>
+    <div>
+      <div class="sb-brand-text">POWERSUPPLY</div>
+      <div class="sb-brand-sub">Admin Panel</div>
+    </div>
+  </div>
+  <nav class="sb-nav">
+    <div class="sb-section">Management</div>
+    <div class="sb-item active" data-page="market"><span class="sb-icon">🛒</span> Marketplace <span class="nav-count" id="navCount">0</span></div>
+    <div class="sb-item " data-page="dashboard"><span class="sb-icon">📊</span> Dashboard</div>
+    <div class="sb-item " data-page="Electricity"><span class="sb-icon">⚡</span> Electricity</div>
+    <div class="sb-section">Orders</div>
+    <div class="sb-item" data-page="orders"><span class="sb-icon">📦</span> All Orders <span class="sb-badge" id="sbAllOrders">0</span></div>
+    <div class="sb-item" data-page="completed"><span class="sb-icon">✅</span> Completed <span class="sb-badge" id="sbCompleted">0</span></div>
+    <div class="sb-item" data-page="pending"><span class="sb-icon">⏳</span> Pending <span class="sb-badge" id="sbPending">0</span></div>
+    <div class="sb-section">Users</div>
+    <div class="sb-item" data-page="users"><span class="sb-icon">👥</span> All Users <span class="sb-badge" id="sbUsers">0</span></div>
+    <div class="sb-section">System</div>
+    <div class="sb-item" data-page="settings"><span class="sb-icon">⚙</span> Settings</div>
+    <div class="sb-item" data-page="analytics"><span class="sb-icon">📊</span> Analytics</div>
+    <div class="sb-item" onclick="window.open('marketplace.html')"><span class="sb-icon">🌐</span> View Market</div>
+  </nav>
+  <div class="sb-footer">
+    <div class="admin-pill">
+      <div class="admin-av">AD</div>
+      <div>
+        <div class="admin-name">Administrator</div>
+        <div class="admin-role">Super Admin</div>
+      </div>
+      <button class="logout-btn" onclick="adminLogout()">Out</button>
+    </div>
+  </div>
+</aside>
+
+<!-- ══════════════════ MAIN ══════════════════ -->
+<div class="main" id="adminMain" style="display:none;">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="page-crumb" id="adminCrumb">Dashboard</div>
+      <div class="page-title" id="adminTitle">Overview</div>
+    </div>
+    <div class="topbar-right">
+      <div class="live-chip"><div class="live-dot"></div> Live Sync</div>
+      <a href="marketplace.html" target="_blank" class="topbar-link">🌐 View Marketplace</a>
+      <div class="notif-btn" onclick="toggleNotifPanel()" id="notifBtn">🔔<div class="notif-count" id="notifCount">0</div></div>
+      <a href="dashboard.html" class="view-site-btn" target="_blank">👁 Customer View</a>
+    </div>
+  </div>
+
+  <!-- NOTIF PANEL -->
+  <div class="notif-panel" id="notifPanel">
+    <div class="notif-header">🔔 Notifications</div>
+    <div id="notifList"></div>
+  </div>
+
+  <!--PAGE: MARKETPLACE-->
+  <div class="page active" id="page-market">
+
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-icon">📦</div>
+      <div><div class="stat-val" id="statTotal">0</div><div class="stat-label">Total Products</div></div>
+    </div>
+    <div class="stat-card yellow">
+      <div class="stat-icon">🔥</div>
+      <div><div class="stat-val" id="statActive">0</div><div class="stat-label">Active Listings</div></div>
+    </div>
+    <div class="stat-card green">
+      <div class="stat-icon">💰</div>
+      <div><div class="stat-val" id="statAvg">0</div><div class="stat-label">Avg Price (Ksh)</div></div>
+    </div>
+    <div class="stat-card red">
+      <div class="stat-icon">⭐</div>
+      <div><div class="stat-val" id="statBadged">0</div><div class="stat-label">Badged Items</div></div>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- ADD/EDIT FORM -->
+    <div class="add-panel">
+      <div class="panel-head">
+        <span>📝</span>
+        <h2 id="formHeading">Add New Product</h2>
+        <div class="panel-tag" id="formMode">NEW</div>
+      </div>
+      <div class="panel-body">
+        <input type="hidden" id="editId"/>
+
+        <div class="fg">
+          <label>Product Name <span class="req">*</span></label>
+          <div class="iw">
+            <span class="ii">📱</span>
+            <input type="text" id="pName" placeholder="e.g. iPhone 17 Pro Max"/>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;">
+          <div class="fg">
+            <label>Price (Ksh) <span class="req">*</span></label>
+            <div class="iw">
+              <span class="ii">💰</span>
+              <input type="number" id="pPrice" placeholder="e.g. 70000" min="0"/>
+            </div>
+          </div>
+          <div class="fg">
+            <label>Category <span class="req">*</span></label>
+            <div class="iw" style="position:relative;">
+              <span class="ii">🏷</span>
+              <select id="pCategory">
+                <option value="">Select category</option>
+                <option value="electronics">Electronics</option>
+                <option value="power">Power</option>
+                <option value="accessories">Accessories</option>
+                <option value="computers">Computers</option>
+                <option value="phones">Phones</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="fg">
+          <label>Description</label>
+          <textarea id="pDesc" rows="3" style="padding-left:0.9rem;" placeholder="Short product description..."></textarea>
+        </div>
+
+        <div class="fg">
+          <label>Image URL <span style="color:var(--muted);font-weight:400;text-transform:none;font-size:0.65rem;">(paste a direct image link)</span></label>
+          <div class="iw">
+            <span class="ii">🖼</span>
+            <input type="url" id="pImage" placeholder="https://example.com/product.jpg" oninput="previewImage()"/>
+          </div>
+          <div class="img-preview-wrap" id="previewWrap">
+            <img id="imgPreview" class="img-preview" alt="Preview"/>
+            <div class="img-placeholder-text" id="previewPlaceholder">
+              🖼<br><small>Image preview will appear here</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="fg">
+          <label>Emoji Icon <span style="color:var(--muted);font-weight:400;text-transform:none;font-size:0.65rem;">(fallback if no image)</span></label>
+          <div class="iw">
+            <span class="ii">✨</span>
+            <input type="text" id="pEmoji" placeholder="e.g. 💻 📱 ⚡ 🔌"/>
+          </div>
+        </div>
+
+        <div class="fg">
+          <label>Promotional Badge</label>
+          <div class="badge-row">
+            <button class="badge-opt none selected" onclick="selectBadge('',this)">None</button>
+            <button class="badge-opt" onclick="selectBadge('NEW',this)" style="color:#00dcb4;border-color:rgba(0,220,180,0.3);">NEW</button>
+            <button class="badge-opt" onclick="selectBadge('HOT',this)" style="color:#f55a72;border-color:rgba(245,90,114,0.3);">HOT</button>
+            <button class="badge-opt" onclick="selectBadge('SALE',this)" style="color:#f5c842;border-color:rgba(245,200,66,0.3);">SALE</button>
+          </div>
+          <input type="hidden" id="pBadge" value=""/>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn-clear" onclick="clearForm()">✕ Clear</button>
+          <button class="btn-post" id="btnPost" onclick="postProduct()">⚡ Post Product</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRODUCTS LIST -->
+    <div class="list-panel">
+      <div class="list-head">
+        <span>📦</span>
+        <h2>Posted Products</h2>
+        <div class="list-count" id="listCount">0</div>
+        <input type="text" class="list-search" id="listSearch" placeholder="Search..." oninput="renderList()"/>
+      </div>
+      <div class="products-list" id="productsList"></div>
+    </div>
+
+  </div>
+
+  <!-- DELETE MODAL -->
+<div class="modal-overlay" id="deleteModal">
+  <div class="modal">
+    <h3>🗑 Delete Product</h3>
+    <p>Are you sure you want to remove this product from the marketplace? This action cannot be undone and will update the live store immediately.</p>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="closeModal()">Cancel</button>
+      <button class="modal-confirm" onclick="confirmDelete()">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+  </div>
+
+  <!-- ── DASHBOARD ── -->
+  <div class="page " id="page-dashboard">
+    <div style="margin-bottom:1.5rem;">
+      <div style="font-family:'Orbitron',monospace;font-size:0.62rem;color:var(--muted);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:0.3rem;">⚙ Control Center</div>
+      <h1 style="font-family:'Orbitron',monospace;font-weight:700;font-size:1.3rem;">Admin Dashboard</h1>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat-card"><div class="sc-icon">👥</div><div class="sc-val" id="adStatUsers">0</div><div class="sc-label">Total Users</div><div class="sc-change">↑ Registered</div></div>
+      <div class="stat-card"><div class="sc-icon">📦</div><div class="sc-val" id="adStatOrders">0</div><div class="sc-label">Total Orders</div><div class="sc-change">↑ All time</div></div>
+      <div class="stat-card"><div class="sc-icon">✅</div><div class="sc-val green" id="adStatDelivered">0</div><div class="sc-label">Delivered</div><div class="sc-change">Completed</div></div>
+      <div class="stat-card"><div class="sc-icon">💰</div><div class="sc-val teal" id="adStatRevenue">0</div><div class="sc-label">Revenue (Ksh)</div><div class="sc-change">↑ Total</div></div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:2fr 1fr;gap:1.5rem;margin-bottom:1.5rem;">
+      <div class="chart-card">
+        <div class="chart-title">Revenue Overview <span class="ct-sub">Last 6 months</span></div>
+        <canvas id="adminChart" height="160"></canvas>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Order Status Distribution</div>
+        <canvas id="statusChart" height="160"></canvas>
+      </div>
+    </div>
+
+    <!-- Recent Orders Preview -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
+      <div class="chart-card">
+        <div class="chart-title">Recent Orders <span class="ct-sub">Latest 5</span></div>
+        <div id="recentOrdersPreview"></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">New Users <span class="ct-sub">Latest registrations</span></div>
+        <div id="recentUsersPreview"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PAGE: ALL ORDERS ── -->
+  <div class="page" id="page-orders">
+    <div style="margin-bottom:1.5rem;display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:1rem;">
+      <div>
+        <h1 style="font-family:'Orbitron',monospace;font-weight:700;font-size:1.3rem;margin-bottom:0.3rem;">All Orders</h1>
+        <p style="font-size:0.78rem;color:var(--muted);">Manage and update all customer orders across the platform.</p>
+      </div>
+      <button class="admin-login-btn" style="width:auto;padding:0.6rem 1.4rem;font-size:0.7rem;" onclick="openAddOrderModal()">+ Add Order</button>
+    </div>
+    <div class="tbl-wrap">
+      <div class="tbl-toolbar">
+        <div class="sec-hd" style="margin:0;"><h2>Orders</h2><div class="count-badge" id="allOrdersCount">0</div></div>
+        <div style="display:flex;gap:0.6rem;flex-wrap:wrap;align-items:center;">
+          <div class="srch-wrap"><input type="text" class="tbl-search" id="allOrdersSearch" placeholder="Search..." oninput="renderAllOrders()"/></div>
+          <select class="tbl-select" id="allOrdersFilter" onchange="renderAllOrders()">
+            <option value="all">All Status</option>
+            <option value="pending">Pending</option>
+            <option value="processing">Processing</option>
+            <option value="shipped">Shipped</option>
+            <option value="delivered">Delivered</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+          <select class="tbl-select" id="allOrdersSort" onchange="renderAllOrders()">
+            <option value="newest">Newest First</option>
+            <option value="oldest">Oldest First</option>
+            <option value="price-high">Price: High→Low</option>
+            <option value="price-low">Price: Low→High</option>
+          </select>
+        </div>
+      </div>
+      <div id="allOrdersContainer"></div>
+    </div>
+  </div>
+
+  <!-- ── PAGE: COMPLETED ORDERS ── -->
+  <div class="page" id="page-completed">
+    <div style="margin-bottom:1.5rem;">
+      <h1 style="font-family:'Orbitron',monospace;font-weight:700;font-size:1.3rem;margin-bottom:0.3rem;">Completed Orders</h1>
+      <p style="font-size:0.78rem;color:var(--muted);">All orders marked as delivered.</p>
+    </div>
+    <div class="stat-row" style="grid-template-columns:repeat(3,1fr);">
+      <div class="stat-card"><div class="sc-icon">✅</div><div class="sc-val green" id="compAdTotal">0</div><div class="sc-label">Total Delivered</div></div>
+      <div class="stat-card"><div class="sc-icon">💰</div><div class="sc-val teal" id="compAdRevenue">0</div><div class="sc-label">Revenue (Ksh)</div></div>
+      <div class="stat-card"><div class="sc-icon">📈</div><div class="sc-val" id="compAdAvg">0</div><div class="sc-label">Avg Order (Ksh)</div></div>
+    </div>
+    <div class="tbl-wrap">
+      <div class="tbl-toolbar">
+        <div class="sec-hd" style="margin:0;"><h2>Delivered Orders</h2><div class="count-badge" id="compAdCount">0</div></div>
+        <div class="srch-wrap"><input type="text" class="tbl-search" id="compSearch" placeholder="Search..." oninput="renderCompletedAdmin()"/></div>
+      </div>
+      <div id="compAdContainer"></div>
+    </div>
+  </div>
+
+  <!-- ── PAGE: PENDING ORDERS ── -->
+  <div class="page" id="page-pending">
+    <div style="margin-bottom:1.5rem;">
+      <h1 style="font-family:'Orbitron',monospace;font-weight:700;font-size:1.3rem;margin-bottom:0.3rem;">Pending Orders</h1>
+      <p style="font-size:0.78rem;color:var(--muted);">Orders waiting to be processed or shipped.</p>
+    </div>
+    <div class="tbl-wrap">
+      <div class="tbl-toolbar">
+        <div class="sec-hd" style="margin:0;"><h2>Active Orders</h2><div class="count-badge" id="pendAdCount">0</div></div>
+        <div class="srch-wrap"><input type="text" class="tbl-search" id="pendSearch" placeholder="Search..." oninput="renderPendingAdmin()"/></div>
+      </div>
+      <div id="pendAdContainer"></div>
+    </div>
+  </div>
+
+  <!-- ── PAGE: USERS ── -->
+  <div class="page" id="page-users">
+    <div style="margin-bottom:1.5rem;display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:1rem;">
+      <div>
+        <h1 style="font-family:'Orbitron',monospace;font-weight:700;font-size:1.3rem;margin-bottom:0.3rem;">User Management</h1>
+        <p style="font-size:0.78rem;color:var(--muted);">All registered customer accounts on the platform.</p>
+      </div>
+    </div>
+    <div class="stat-row" style="grid-template-columns:repeat(4,1fr);">
+      <div class="stat-card"><div class="sc-icon">👥</div><div class="sc-val" id="usrTotal">0</div><div class="sc-label">Total Users</div></div>
+      <div class="stat-card"><div class="sc-icon">✅</div><div class="sc-val green" id="usrActive">0</div><div class="sc-label">Active</div></div>
+      <div class="stat-card"><div class="sc-icon">📦</div><div class="sc-val teal" id="usrWithOrders">0</div><div class="sc-label">Have Orders</div></div>
+      <div class="stat-card"><div class="sc-icon">🆕</div><div class="sc-val" id="usrNew">0</div><div class="sc-label">New This Month</div></div>
+    </div>
+    <div class="tbl-wrap">
+      <div class="tbl-toolbar">
+        <div class="sec-hd" style="margin:0;"><h2>Registered Users</h2><div class="count-badge" id="usersCount">0</div></div>
+        <div style="display:flex;gap:0.6rem;flex-wrap:wrap;align-items:center;">
+          <div class="srch-wrap"><input type="text" class="tbl-search" id="usersSearch" placeholder="Search users..." oninput="renderUsers()"/></div>
+          <select class="tbl-select" id="usersSort" onchange="renderUsers()">
+            <option value="newest">Newest First</option>
+            <option value="oldest">Oldest First</option>
+            <option value="name">Name A–Z</option>
+            <option value="orders">Most Orders</option>
+          </select>
+        </div>
+      </div>
+      <div id="usersContainer"></div>
+    </div>
+  </div>
+
+  <!-- ── PAGE: SETTINGS ── -->
+  <div class="page" id="page-settings">
+    <div style="margin-bottom:1.5rem;">
+      <h1 style="font-family:'Orbitron',monospace;font-weight:700;font-size:1.3rem;margin-bottom:0.3rem;">Admin Settings</h1>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
+      <div class="chart-card">
+        <div class="chart-title">Change Admin Password</div>
+        <div class="aaf" style="margin-bottom:1rem;"><label>Current Password</label><div class="aai-w"><span class="aaicon">🔒</span><input class="admin-input" type="password" id="settOld" placeholder="Current password"/></div></div>
+        <div class="aaf" style="margin-bottom:1rem;"><label>New Password</label><div class="aai-w"><span class="aaicon">🔐</span><input class="admin-input" type="password" id="settNew" placeholder="New password (min 6 chars)"/></div></div>
+        <button class="admin-login-btn" style="padding:0.75rem;" onclick="changeAdminPass()">Update Password</button>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Data Management</div>
+        <div style="display:flex;flex-direction:column;gap:0.8rem;margin-top:0.5rem;">
+          <button class="action-btn" style="width:100%;padding:0.7rem;font-size:0.75rem;" onclick="exportData()">📥 Export All Data (JSON)</button>
+          <button class="action-btn danger" style="width:100%;padding:0.7rem;font-size:0.75rem;" onclick="clearOrders()">🗑 Clear All Orders</button>
+          <button class="action-btn danger" style="width:100%;padding:0.7rem;font-size:0.75rem;" onclick="clearUsers()">🗑 Clear All Users (Keep Admin)</button>
+        </div>
+        <div style="margin-top:1.2rem;padding:0.8rem;background:var(--bg);border:1px solid var(--border);font-size:0.72rem;color:var(--muted);line-height:1.6;">
+          ⚠ Data management actions are irreversible. Export your data before clearing.
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<!-- ADD ORDER MODAL -->
+<div class="modal-overlay" id="addOrderModal">
+  <div class="modal-box">
+    <div class="modal-title">+ Add New Order</div>
+    <button class="modal-close" onclick="closeModalA()">✕</button>
+    <div class="mf">
+      <label>Customer Email *</label>
+      <select id="moUser"></select>
+    </div>
+    <div class="mf-row">
+      <div class="mf"><label>Product Name *</label><input type="text" id="moProd" placeholder="e.g. Laptop"/></div>
+      <div class="mf"><label>Category *</label>
+        <select id="moCat">
+          <option value="Electronics">Electronics</option><option value="Phones">Phones</option>
+          <option value="Power">Power</option><option value="Computers">Computers</option>
+          <option value="Accessories">Accessories</option>
+        </select>
+      </div>
+    </div>
+    <div class="mf-row">
+      <div class="mf"><label>Price (Ksh) *</label><input type="number" id="moPrice" placeholder="e.g. 20000"/></div>
+      <div class="mf"><label>Quantity</label><input type="number" id="moQty" value="1" min="1"/></div>
+    </div>
+    <div class="mf">
+      <label>Status</label>
+      <select id="moStatus">
+        <option value="pending">Pending</option><option value="processing">Processing</option>
+        <option value="shipped">Shipped</option><option value="delivered">Delivered</option>
+      </select>
+    </div>
+    <div class="mf"><label>Emoji Icon</label><input type="text" id="moEmoji" placeholder="📦" value="📦"/></div>
+    <button class="modal-submit" onclick="submitNewOrder()">⚡ Create Order</button>
+  </div>
+  <div class="toast" id="adminToast"></div>
+</div>
+
+<div class="toast" id="adminToast"></div>
+
+<script src="admin.js"></script>
+</body>
+</html>

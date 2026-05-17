@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>PowerSupply — Electronic Market</title>
+<link rel="stylesheet" href="power.css">
+<link rel="icon" type="image/png" href="logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-hex">⚡</div>
+    <div class="brand-text">VOLT<br>CONNECT</div>
+  </div>
+  <nav class="sidebar-nav">
+    <a href="dashboard.html" class="nav-item"><span class="nav-icon">📊</span> Dashboard</a>
+    <a href="#" class="nav-item active"><span class="nav-icon">🛒</span> Products <span class="nav-badge" id="productCountBadge">0</span></a>
+    <a href="#" class="nav-item" id="cart-link" onclick="openCart(event)"><span class="nav-icon">🛍</span> Cart<span class="nav-badge" id="cartBadgeSide">0</span></a>
+    <a href="#elecOverlay" class="nav-item" id="pay-link" onclick=" openElectricityCard()"><span class="nav-icon">⚡</span> Pay Electricity</a>
+    <a href="powersupply.html" class="nav-item"><span class="nav-icon">🏠</span> Home</a>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="user-chip">
+      <div class="user-av" id="mktUserAv">ULP</div>
+      <div class="user-info">
+        <div class="user-name" id="mktUserName">Unlimited Power</div>
+        <div class="user-role" id="mktUserRole">Sponsor</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<button class="side-toggle-btn" onclick="toggleMenuSide()">☰</button>
+
+<!-- MAIN -->
+<div class="main">
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="page-crumb">Market / <span>Electronic Goods</span></div>
+    </div>
+    <div class="topbar-right">
+      <a href="powersupply.html" class="topbar-btn" >🏠 Home</a>
+      <button class="topbar-btn" onclick="openElectricityCard() " style="border-color:rgba(245,200,66,0.3);color:#f5c842;">⚡ Pay Electricity</button>
+      <button class="cart-btn" id="cart-linkB" onclick="openCart(event)">
+        🛒 Cart (<span id="cartCountTop">0</span>)
+      </button>
+    </div>
+  </div>
+
+  <!-- HERO BANNER -->
+  <div class="hero-banner">
+    <div class="banner-tag">⚡ Live Marketplace</div>
+    <h1 class="banner-title">Electronic Market — Order the best electronics at pocket-friendly prices</h1>
+    <p class="banner-sub">
+      Hands-on all kinds of electronics you may need. Join many shoppers and start growing your chances of winning <strong>unimaginable prizes</strong>. Products are updated live by our admin team.
+    </p>
+  </div>
+
+  <!-- TOOLBAR -->
+  <div class="toolbar">
+    <div class="toolbar-left">
+      <div class="section-head-title">Available Goods</div>
+      <div class="product-count" id="productCountLabel">0 items</div>
+    </div>
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" class="search-input" id="searchInput" placeholder="Search for goods..." oninput="filterProducts()"/>
+    </div>
+    <div class="filter-row">
+      <button class="filter-btn active" onclick="setFilter('all',this)">All</button>
+      <button class="filter-btn" onclick="setFilter('electronics',this)">Electronics</button>
+      <button class="filter-btn" onclick="setFilter('power',this)">Power</button>
+      <button class="filter-btn" onclick="setFilter('accessories',this)">Accessories</button>
+    </div>
+    <select class="sort-select" id="sortSelect" onchange="filterProducts()">
+      <option value="default">Sort: Default</option>
+      <option value="price-asc">Price: Low → High</option>
+      <option value="price-desc">Price: High → Low</option>
+      <option value="name">Name A–Z</option>
+    </select>
+  </div>
+
+  <!-- PRODUCTS -->
+  <div class="products-section">
+    <div class="products-grid" id="productsGrid">
+      <!-- Skeleton loaders -->
+      <div class="skeleton"><div class="skel-img"></div><div class="skel-body"><div class="skel-line"></div><div class="skel-line w60"></div><div class="skel-line w40"></div></div></div>
+      <div class="skeleton"><div class="skel-img"></div><div class="skel-body"><div class="skel-line"></div><div class="skel-line w60"></div><div class="skel-line w40"></div></div></div>
+      <div class="skeleton"><div class="skel-img"></div><div class="skel-body"><div class="skel-line"></div><div class="skel-line w60"></div><div class="skel-line w40"></div></div></div>
+      <div class="skeleton"><div class="skel-img"></div><div class="skel-body"><div class="skel-line"></div><div class="skel-line w60"></div><div class="skel-line w40"></div></div></div>
+    </div>
+  </div>
+</div>
+
+<!--========================= 
+PAY ELECTRICITY 
+==========================-->
+<div class="elec-overlay" id="elecOverlay">
+  <div class="elec-modal">
+
+    <!-- SCREEN 1: AMOUNT ENTRY -->
+    <div class="elec-screen show" id="elecS1">
+      <div class="elec-hdr">
+        <div class="elec-hdr-icon">⚡</div>
+        <div>
+          <div class="elec-hdr-tag">Smart Meter</div>
+          <div class="elec-hdr-title">Pay Electricity</div>
+          <div class="elec-hdr-sub">Auto-connects your meter on payment</div>
+        </div>
+        <button class="elec-close" onclick="closeElecCard()">✕</button>
+      </div>
+
+      <!-- METER INFO BAR (populated from user account) -->
+      <div class="meter-bar">
+        <div class="mb-left">
+          <div class="mb-label">Your Meter</div>
+          <div class="mb-val" id="elecMeterNum">MTR-N/A</div>
+          <div class="mb-status">
+            <div class="mb-status-dot"></div> Connected & Active
+          </div>
+        </div>
+        <div>
+          <div class="mb-label">Account</div>
+          <div class="mb-val" id="elecUserName" style="font-size:0.75rem;">—</div>
+        </div>
+      </div>
+
+      <div class="elec-body">
+        <div class="elec-fg">
+          <label class="elec-label">Select or Enter Amount (Ksh) <span style="color:#f55a72">*</span></label>
+          <div class="amount-presets" id="amountPresets">
+            <div class="amount-preset" onclick="selectAmount(50,this)">Ksh 50</div>
+            <div class="amount-preset" onclick="selectAmount(100,this)">Ksh 100</div>
+            <div class="amount-preset" onclick="selectAmount(200,this)">Ksh 200</div>
+            <div class="amount-preset" onclick="selectAmount(500,this)">Ksh 500</div>
+            <div class="amount-preset" onclick="selectAmount(1000,this)">Ksh 1,000</div>
+            <div class="amount-preset" onclick="selectAmount(2000,this)">Ksh 2,000</div>
+            <div class="amount-preset" onclick="selectAmount(5000,this)">Ksh 5,000</div>
+            <div class="amount-preset" onclick="selectAmount(0,this)" id="customPreset">Custom</div>
+          </div>
+          <div class="ei-wrap">
+            <span class="ei-icon">💰</span>
+            <input class="elec-input" type="number" id="elecAmount" placeholder="Or type custom amount..." min="10" oninput="updateUnits()"/>
+          </div>
+          <div class="e-ferr" id="elecAmountErr">Please enter an amount of at least Ksh 10</div>
+        </div>
+
+        <!-- UNITS ESTIMATE -->
+        <div class="unit-display">
+          <div class="unit-num" id="unitEstimate">0.0</div>
+          <div class="unit-unit">kWh Units Estimated</div>
+        </div>
+
+        <!-- AMOUNT BREAKDOWN -->
+        <div class="amount-summary" id="amountSummary">
+          <div class="as-row"><span class="as-label">Base Amount</span><span class="as-val teal" id="sumBase">Ksh 0</span></div>
+          <div class="as-row"><span class="as-label">VAT (16%)</span><span class="as-val" id="sumVat">Ksh 0</span></div>
+          <div class="as-row"><span class="as-label">Fuel Levy</span><span class="as-val" id="sumLevy">Ksh 0</span></div>
+          <div class="as-row"><span class="as-label">Units (Excl. taxes)</span><span class="as-val green" id="sumUnits">0.0 kWh</span></div>
+          <div class="as-row" style="padding-top:0.6rem;"><span class="as-label" style="font-weight:700;color:#e4f0ec;">You Pay</span><span class="as-val teal" id="sumTotal" style="font-size:0.88rem;font-weight:700;">Ksh 0</span></div>
+        </div>
+
+        <div class="e-info-box green">
+          <strong>⚡ Auto-Connect:</strong> Once payment is confirmed, your meter connects automatically via WiFi within 30 seconds. A token code is also sent to your phone as backup.
+        </div>
+
+        <button class="elec-submit" onclick="elecStep2()">Next — Choose Payment →</button>
+      </div>
+    </div>
+
+    <!-- SCREEN 2: PAYMENT METHOD -->
+    <div class="elec-screen" id="elecS2">
+      <div class="elec-hdr">
+        <div class="elec-hdr-icon">💳</div>
+        <div>
+          <div class="elec-hdr-tag">Step 2 of 3</div>
+          <div class="elec-hdr-title">Payment Method</div>
+          <div class="elec-hdr-sub" id="elecS2Sub">Amount: Ksh 0</div>
+        </div>
+        <button class="elec-close" onclick="closeElecCard()">✕</button>
+      </div>
+
+      <div class="elec-body">
+        <button class="elec-back" onclick="goElecScreen(1)">← Back</button>
+
+        <div class="elec-fg">
+          <label class="elec-label">How would you like to pay?</label>
+          <div class="pay-method-row" id="elecPayMethods">
+            <div class="pm-card selected" data-method="mpesa" onclick="selectPayMethod(this)">
+              <div class="pm-icon">📱</div>
+              <div class="pm-name">M-Pesa</div>
+            </div>
+            <div class="pm-card" data-method="card" onclick="selectPayMethod(this)">
+              <div class="pm-icon">💳</div>
+              <div class="pm-name">Card</div>
+            </div>
+            <div class="pm-card" data-method="bank" onclick="selectPayMethod(this)">
+              <div class="pm-icon">🏦</div>
+              <div class="pm-name">Bank</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- M-PESA FIELDS -->
+        <div id="methodMpesa" class="phone-method-box">
+          <div class="pmb-title">📱 M-Pesa STK Push</div>
+          <div class="elec-fg">
+            <label class="elec-label">M-Pesa Phone Number</label>
+            <div class="ei-wrap">
+              <span class="ei-icon">📱</span>
+              <input class="elec-input" type="tel" id="elecPhone" placeholder="07xx xxx xxx" maxlength="13" oninput="this.value=this.value.replace(/[^0-9+]/g,'')"/>
+            </div>
+            <div class="e-ferr" id="elecPhoneErr">Enter a valid Safaricom number</div>
+            <div class="e-hint">You'll receive a push notification to enter your M-Pesa PIN</div>
+          </div>
+        </div>
+
+        <!-- CARD FIELDS -->
+        <div id="methodCard" class="phone-method-box" style="display:none;">
+          <div class="pmb-title">💳 Card Payment</div>
+          <div class="elec-fg">
+            <label class="elec-label">Card Number</label>
+            <div class="ei-wrap"><span class="ei-icon">💳</span>
+              <input class="elec-input" type="text" id="elecCardNum" placeholder="0000 0000 0000 0000" maxlength="19" oninput="this.value=this.value.replace(/\D/g,'').replace(/(.{4})/g,'$1 ').trim()"/>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;">
+            <div class="elec-fg">
+              <label class="elec-label">Expiry</label>
+              <div class="ei-wrap"><span class="ei-icon">📅</span>
+                <input class="elec-input" type="text" placeholder="MM/YY" maxlength="5"/>
+              </div>
+            </div>
+            <div class="elec-fg">
+              <label class="elec-label">CVV</label>
+              <div class="ei-wrap"><span class="ei-icon">🔐</span>
+                <input class="elec-input" type="password" placeholder="•••" maxlength="4"/>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- BANK FIELDS -->
+        <div id="methodBank" class="phone-method-box" style="display:none;">
+          <div class="pmb-title">🏦 Bank Transfer</div>
+          <div class="e-info-box teal" style="margin-bottom:0.6rem;">
+            Transfer to <strong>PowerSupply Ltd</strong> — Equity Bank · Acc: <strong>0123456789</strong><br>
+            Reference: <strong id="elecBankRef">PSS-000000</strong>
+          </div>
+          <div class="elec-fg">
+            <label class="elec-label">Your Name (as on bank account)</label>
+            <div class="ei-wrap"><span class="ei-icon">👤</span>
+              <input class="elec-input" type="text" id="elecBankName" placeholder="Full name"/>
+            </div>
+          </div>
+        </div>
+
+        <div class="amount-summary" style="margin-top:0.5rem;">
+          <div class="as-row"><span class="as-label">Paying</span><span class="as-val teal" id="s2Total">Ksh 0</span></div>
+          <div class="as-row"><span class="as-label">Units</span><span class="as-val green" id="s2Units">0.0 kWh</span></div>
+          <div class="as-row"><span class="as-label">Meter</span><span class="as-val yellow" id="s2Meter">MTR-N/A</span></div>
+        </div>
+    
+        <button class="elec-submit" onclick="elecPay()">⚡ Pay & Connect Meter</button>
+        <div class="elec-sec-note">🔒 Secured · Auto-connects within 30s of payment</div>
+      </div>
+    </div>
+
+    <!-- SCREEN 3: WIFI CONNECTING -->
+    <div class="elec-screen" id="elecS3">
+      <div class="wifi-anim">
+        <div class="wifi-rings">
+          <div class="wifi-ring"></div>
+          <div class="wifi-ring"></div>
+          <div class="wifi-ring"></div>
+          <div class="wifi-center">⚡</div>
+        </div>
+        <div class="wifi-title" id="wifiTitle">Processing Payment</div>
+        <div class="wifi-sub" id="wifiSub">Authorizing transaction and preparing smart meter connection…</div>
+        <div class="connect-steps">
+          <div class="cs-item"><div class="cs-dot" id="cs1"></div><span id="cst1">Authorizing payment</span></div>
+          <div class="cs-item"><div class="cs-dot" id="cs2"></div><span id="cst2">Generating token code</span></div>
+          <div class="cs-item"><div class="cs-dot" id="cs3"></div><span id="cst3">Sending WiFi signal to meter</span></div>
+          <div class="cs-item"><div class="cs-dot" id="cs4"></div><span id="cst4">Loading units onto meter</span></div>
+          <div class="cs-item"><div class="cs-dot" id="cs5"></div><span id="cst5">Confirming connection</span></div>
+        </div>
+        <div class="connect-bar"><div class="connect-fill" id="connectFill"></div></div>
+        <div style="font-family:'Orbitron',monospace;font-size:0.65rem;color:#5a7a8a;" id="wifiPercent">0%</div>
+      </div>
+    </div>
+
+    <!-- SCREEN 4: SUCCESS + TOKEN -->
+    <div class="elec-screen" id="elecS4">
+      <div class="token-screen">
+        <div class="token-check">✓</div>
+        <div class="token-title">Meter Connected! ⚡</div>
+        <div class="token-sub">
+          Payment confirmed. Your meter has been automatically connected via WiFi and units have been loaded.
+        </div>
+
+        <!-- TOKEN CODE -->
+        <div class="token-code-card">
+          <div class="token-code-label">🔑 Your Backup Token Code</div>
+          <div class="token-code" id="tokenCodeDisplay">0000 0000 0000 0000 0</div>
+          <button class="token-copy" onclick="copyToken(); alert('Token code copied! ✓', 'success');">⎘ Copy Token</button>
+          <div style="font-size:0.65rem;color:#ddd;margin-top:0.6rem;line-height:1.5;">
+            Save this code. If your meter disconnects, enter it on your meter keypad to reconnect.
+          </div>
+        </div>
+
+        <!-- CONNECTION STATUS -->
+        <div class="meter-connect-status">
+          <div class="mcs-row" style="margin-bottom:0.5rem;">
+            <span class="mcs-label">Connection</span>
+            <div class="mcs-live"><div class="mcs-live-dot"></div><span class="mcs-connected">WiFi Connected</span></div>
+          </div>
+          <div class="mcs-row" style="margin-bottom:0.5rem;">
+            <span class="mcs-label">Units Loaded</span>
+            <span class="mcs-val mcs-connected" id="tokenUnits">0.0 kWh</span>
+          </div>
+          <div class="mcs-row" style="margin-bottom:0.5rem;">
+            <span class="mcs-label">Amount Paid</span>
+            <span class="mcs-val" id="tokenAmount" style="color:#00dcb4;">Ksh 0</span>
+          </div>
+          <div class="mcs-row">
+            <span class="mcs-label">Transaction Ref</span>
+            <span class="mcs-val" id="tokenRef" style="color:#f5c842;">—</span>
+          </div>
+        </div>
+
+        <!-- UNITS PROGRESS BAR -->
+        <div class="units-bar-wrap">
+          <div class="units-bar-label">
+            <span>Units Remaining</span>
+            <span id="unitsBarLabel">100%</span>
+          </div>
+          <div class="units-bar-track">
+            <div class="units-bar-fill" id="unitsBarFill" style="width:100%"></div>
+          </div>
+        </div>
+
+        <div class="e-info-box teal" style="text-align:left;">
+          <strong>📱 SMS Sent:</strong> Your token code has been sent to your registered phone number as backup.<br>
+          <strong>💡 Tip:</strong> If power disconnects, enter the token code on your meter keypad to reconnect instantly.
+        </div>
+
+        <button class="done-btn" onclick="closeElecCard();showToast('Meter connected successfully! ⚡','success')">⚡ Done — Meter is Connected</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- CART OVERLAY -->
+<div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+
+<!-- CART PANEL -->
+<div class="cart-panel" id="cartPanel">
+  <div class="cart-header">
+    <div class="cart-title">🛒 Your Cart</div>
+    <button class="cart-close" onclick="closeCart()">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems"></div>
+  <div class="cart-footer">
+    <div class="cart-total">
+      <span class="total-label">Total</span>
+      <span class="total-amt" id="cartTotal">Ksh 0</span>
+    </div>
+    <button class="btn-checkout" 
+    onclick="
+    const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+    openPayment({
+      name: 'Cart (' + cart.length + ' items)',
+      price: total,
+      isCart: true
+    });">⚡ Checkout Now</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!--PAYMENT INTERGRATION-->
+<div class="pay-overlay" id="payOverlay">
+  <div class="pay-modal" id="payModal">
+ 
+   <!-- SCREEN 1 — CHOOSE METHOD -->
+   <div class="pay-screen show" id="screenChoose">
+    <div class="pay-header">
+     <div class="pay-header-icon">⚡</div>
+     <div>
+      <div class="pay-header-tag">Secure Checkout</div>
+      <div class="pay-header-title">Choose Payment Method</div>
+      <div class="pay-header-sub">All transactions are encrypted</div>
+     </div>
+     <button class="pay-close" onclick="closePayment()">✕</button>
+    </div>
+    <div class="pay-order-bar">
+     <div>
+      <div class="order-label">Paying for</div>
+      <div class="order-item-name" id="orderItemName">—</div>
+     </div>
+     <div style="text-align:right;">
+      <div class="order-label">Total</div>
+      <div class="order-amount" id="orderAmountChoose">Ksh 0</div>
+     </div>
+    </div>
+    <div class="pay-body">
+     <div class="pay-methods-label">Select a payment method to continue</div>
+     <div class="pay-methods">
+      <button class="method-btn mpesa" onclick="showPayScreen('screenMpesa')">
+       <div class="method-logo mpesa">M</div>
+       <div class="method-info">
+        <div class="method-name">M-Pesa</div>
+        <div class="method-desc">Safaricom STK push — pay with your M-Pesa PIN</div>
+       </div>
+       <div class="method-tag instant">Instant</div>
+       <span class="method-arrow">›</span>
+      </button>
+      <button class="method-btn paypal" onclick="showPayScreen('screenPaypal')">
+       <div class="method-logo paypal">P</div>
+       <div class="method-info">
+        <div class="method-name">PayPal / Card</div>
+        <div class="method-desc">Credit card, Debit card or PayPal account</div>
+       </div>
+       <div class="method-tag global">Global</div>
+       <span class="method-arrow">›</span>
+      </button>
+      <button class="method-btn bank" onclick="showPayScreen('screenBank')">
+       <div class="method-logo bank">🏦</div>
+       <div class="method-info">
+        <div class="method-name">Bank Transfer</div>
+        <div class="method-desc">Direct bank deposit — receive account details</div>
+       </div>
+       <div class="method-tag secure">Secure</div>
+       <span class="method-arrow">›</span>
+      </button>
+     </div>
+     <button class="pay-cancel-btn" onclick="closePayment()">✕ Cancel</button>
+    </div>
+   </div>
+ 
+   <!-- SCREEN 2 — M-PESA -->
+   <div class="pay-screen" id="screenMpesa">
+    <div class="method-header-bar mpesa-hdr">
+     <div class="mhdr-icon">📱</div>
+     <div>
+      <div class="mhdr-title">M-Pesa Payment</div>
+      <div class="mhdr-sub">Powered by Safaricom · Instant</div>
+     </div>
+     <button class="pay-close" onclick="closePayment()" style="color:rgba(255,255,255,0.5);">✕</button>
+    </div>
+    <div class="pay-body">
+     <button class="back-btn" onclick="showPayScreen('screenChoose')">← Back to methods</button>
+     <div class="info-box green">
+      <strong>How it works:</strong> Enter your M-Pesa number below → you'll receive a push notification → enter your M-Pesa PIN → payment confirmed instantly.
+     </div>
+     <div class="pay-form-group">
+      <label>M-Pesa Phone Number <span class="req">*</span></label>
+      <div class="pay-iw">
+       <span class="pii">📱</span>
+       <input class="pay-input" type="tel" id="mpesaPhone" placeholder="07xx xxx xxx or +2547xx xxx xxx" maxlength="15" oninput="updatePhoneDisplay()"/>
+      </div>
+      <div class="field-hint">Must be a registered Safaricom M-Pesa number</div>
+      <div class="field-err" id="mpesaPhoneErr">Enter a valid Safaricom number (07xx or +254xx)</div>
+     </div>
+     <div class="info-box teal">
+      After clicking Pay, check <strong id="mpesaPhoneDisplay">your phone</strong> for the STK prompt. Enter your PIN to complete. You'll receive an SMS from M-Pesa.
+     </div>
+     <div class="pay-total-row">
+      <span class="ptr-label">Amount to Pay</span>
+      <span class="ptr-amt" id="mpesaTotal">Ksh 0</span>
+     </div>
+     <button class="pay-submit-btn mpesa-btn" onclick="processMpesa()">📱 Send STK Push</button>
+     <div class="security-note">🔒 Secured by Safaricom M-Pesa</div>
+    </div>
+   </div>
+ 
+   <!-- SCREEN 3 — PAYPAL/CARD -->
+   <div class="pay-screen" id="screenPaypal">
+    <div class="method-header-bar paypal-hdr">
+     <div class="mhdr-icon">💳</div>
+     <div>
+      <div class="mhdr-title">PayPal / Card Payment</div>
+      <div class="mhdr-sub">256-bit SSL · PCI DSS Compliant</div>
+     </div>
+     <button class="pay-close" onclick="closePayment()" style="color:rgba(255,255,255,0.5);">✕</button>
+    </div>
+    <div class="pay-body">
+     <button class="back-btn" onclick="showPayScreen('screenChoose')">← Back to methods</button>
+     <div class="card-icons">
+      <div class="card-icon">VISA</div><div class="card-icon">Mastercard</div>
+      <div class="card-icon">AMEX</div><div class="card-icon">PayPal</div><div class="card-icon">Discover</div>
+     </div>
+     <div class="pay-form-group">
+      <label>Cardholder Name <span class="req">*</span></label>
+      <div class="pay-iw"><span class="pii">👤</span>
+       <input class="pay-input" type="text" id="cardName" placeholder="Name as printed on card"/>
+      </div>
+      <div class="field-err" id="cardNameErr">Enter the cardholder's full name</div>
+     </div>
+     <div class="pay-form-group">
+      <label>Card Number <span class="req">*</span></label>
+      <div class="pay-iw"><span class="pii">💳</span>
+       <input class="pay-input" type="text" id="cardNumber" placeholder="0000  0000  0000  0000" maxlength="19" oninput="formatCard(this)"/>
+      </div>
+      <div class="field-err" id="cardNumberErr">Enter a valid 16-digit card number</div>
+     </div>
+     <div class="card-row">
+      <div class="pay-form-group">
+       <label>Expiry <span class="req">*</span></label>
+       <div class="pay-iw"><span class="pii">📅</span>
+        <input class="pay-input" type="text" id="cardExpiry" placeholder="MM / YY" maxlength="7" oninput="formatExpiry(this)"/>
+       </div>
+       <div class="field-err" id="cardExpiryErr">Enter expiry as MM/YY</div>
+      </div>
+      <div class="pay-form-group">
+       <label>CVV <span class="req">*</span></label>
+       <div class="pay-iw"><span class="pii">🔐</span>
+        <input class="pay-input" type="password" id="cardCvv" placeholder="•••" maxlength="4"/>
+       </div>
+       <div class="field-err" id="cardCvvErr">Enter your 3–4 digit CVV</div>
+      </div>
+     </div>
+     <div class="pay-total-row">
+      <span class="ptr-label">Total Charge</span>
+      <span class="ptr-amt" id="paypalTotal">Ksh 0</span>
+     </div>
+     <button class="pay-submit-btn paypal-btn" onclick="processPaypal()">💳 Pay Now</button>
+     <div class="security-note">🔒 SSL Encrypted · No card data stored</div>
+    </div>
+   </div>
+ 
+   <!-- SCREEN 4 — BANK TRANSFER -->
+   <div class="pay-screen" id="screenBank">
+    <div class="method-header-bar bank-hdr">
+     <div class="mhdr-icon">🏦</div>
+     <div>
+      <div class="mhdr-title">Bank Transfer</div>
+      <div class="mhdr-sub">Direct deposit · 1–3 business days</div>
+     </div>
+     <button class="pay-close" onclick="closePayment()" style="color:rgba(255,255,255,0.5);">✕</button>
+    </div>
+    <div class="pay-body">
+     <button class="back-btn" onclick="showPayScreen('screenChoose')">← Back to methods</button>
+     <div class="bank-details-box">
+      <div class="bank-detail-row">
+       <span class="bd-label">Bank</span><span class="bd-val">Equity Bank Kenya</span>
+      </div>
+      <div class="bank-detail-row">
+       <span class="bd-label">Account Name</span><span class="bd-val">PowerSupply Ltd</span>
+      </div>
+      <div class="bank-detail-row">
+       <span class="bd-label">Account No.</span>
+       <div style="display:flex;align-items:center;gap:0.5rem;">
+        <span class="bd-val">0123456789</span>
+        <button class="bd-copy" onclick="copyPayText('0123456789','Account number')">⎘ Copy</button>
+       </div>
+      </div>
+      <div class="bank-detail-row">
+       <span class="bd-label">Sort Code</span>
+       <div style="display:flex;align-items:center;gap:0.5rem;">
+        <span class="bd-val">68-10-20</span>
+        <button class="bd-copy" onclick="copyPayText('681020','Sort code')">⎘ Copy</button>
+       </div>
+      </div>
+      <div class="bank-detail-row">
+       <span class="bd-label">Amount</span>
+       <span class="bd-val" id="bankAmountDisplay" style="color:var(--teal);">Ksh 0</span>
+      </div>
+      <div class="bank-detail-row">
+       <span class="bd-label">Reference</span>
+       <div style="display:flex;align-items:center;gap:0.5rem;">
+        <span class="bd-val" id="bankRef" style="color:var(--yellow);">PSS-000000</span>
+        <button class="bd-copy" id="bankRefCopyBtn">⎘ Copy</button>
+       </div>
+      </div>
+     </div>
+     <div class="info-box teal">
+      ⚠ <strong>Important:</strong> Use <strong id="bankRefInline">PSS-000000</strong> as your payment reference/description. Orders without a reference take longer to verify.
+     </div>
+     <div class="pay-form-group">
+      <label>Your Full Name <span class="req">*</span></label>
+      <div class="pay-iw"><span class="pii">👤</span>
+       <input class="pay-input" type="text" id="bankSenderName" placeholder="Name on your bank account"/>
+      </div>
+      <div class="field-err" id="bankNameErr">Enter your full name</div>
+     </div>
+     <div class="pay-form-group">
+      <label>Your Bank <span class="req">*</span></label>
+      <div class="pay-iw"><span class="pii">🏦</span>
+       <input class="pay-input" type="text" id="bankSenderBank" placeholder="e.g. KCB, Equity, NCBA, Co-op…"/>
+      </div>
+      <div class="field-err" id="bankBankErr">Enter your bank name</div>
+     </div>
+     <div class="pay-total-row">
+      <span class="ptr-label">Transfer Amount</span>
+      <span class="ptr-amt" id="bankTotal">Ksh 0</span>
+     </div>
+     <button class="pay-submit-btn bank-btn" onclick="processBank()">🏦 Confirm Transfer Details</button>
+     <div class="security-note">🔒 Bank-grade encryption · Verified account</div>
+    </div>
+   </div>
+ 
+   <!-- SCREEN 5 — PROCESSING -->
+   <div class="pay-screen" id="screenProcessing">
+    <div class="processing-inner">
+     <div class="processing-ring"></div>
+     <div class="processing-title" id="processingTitle">Processing Payment</div>
+     <div class="processing-sub" id="processingSubtitle">Connecting to payment gateway…</div>
+     <div class="processing-steps">
+      <div class="proc-step"><div class="proc-dot" id="pd1"></div><span id="ps1">Initializing…</span></div>
+      <div class="proc-step"><div class="proc-dot" id="pd2"></div><span id="ps2">Authorizing…</span></div>
+      <div class="proc-step"><div class="proc-dot" id="pd3"></div><span id="ps3">Confirming…</span></div>
+     </div>
+    </div>
+   </div>
+ 
+   <!-- SCREEN 6 — SUCCESS -->
+   <div class="pay-screen" id="screenSuccess">
+    <div class="success-inner">
+     <div class="success-hex">✓</div>
+     <div class="success-title">Payment Successful!</div>
+     <div class="success-sub" id="successMsg">Payment confirmed. Your order is now being prepared.</div>
+     <div class="success-ref" id="successRef">REF: TXN-000000</div>
+     <div class="success-sub" style="font-size:0.7rem;">A confirmation has been sent to your email/SMS.</div>
+     <button class="success-done-btn" onclick="closePayment()">⚡ Done — Continue Shopping</button>
+    </div>
+   </div>
+ 
+   <!-- SCREEN 7 — FAILED -->
+   <div class="pay-screen" id="screenFailed">
+    <div class="failed-inner">
+     <div class="failed-icon">⚠️</div>
+     <div class="failed-title">Payment Failed</div>
+     <div class="failed-sub" id="failedMsg">The transaction could not be completed. Please try again or choose a different method.</div>
+     <button class="retry-btn" onclick="showPayScreen('screenChoose')">↺ Try Again</button>
+     <button class="pay-cancel-btn" style="max-width:260px;margin-top:0;" onclick="closePayment()">Close</button>
+    </div>
+   </div>
+ 
+  </div>
+ </div>
+
+ <!-- ══════════════════════════════════════
+     VOLT AI PANEL
+══════════════════════════════════════ -->
+<button class="ai-trigger" id="aiTrigger" onclick="togglePanel()" title="Open VOLT AI">
+  <span id="triggerIcon">⚡</span>
+  <div class="notif-badge" id="notifBadge" style="display:none;">3</div>
+</button>
+
+<div class="ai-panel" id="aiPanel">
+
+  <!-- HEADER -->
+  <div class="panel-hdr">
+    <div class="volt-avatar">⚡</div>
+    <div class="volt-info">
+      <div class="volt-name">VOLT AI <span class="speaking-wave" id="speakWave"><span class="sw-bar"></span><span class="sw-bar"></span><span class="sw-bar"></span><span class="sw-bar"></span><span class="sw-bar"></span></span></div>
+      <div class="volt-status"><div class="status-dot"></div><span id="voltStatus">PowerSupply Intelligence · Online</span></div>
+    </div>
+    <div class="panel-actions">
+      <button class="pa-btn" onclick="clearChat()" title="Clear chat">🗑</button>
+      <button class="pa-btn" onclick="togglePanel()" title="Close">✕</button>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="quick-tabs">
+    <div class="qtab active" onclick="switchTab('chat', this)">💬 Chat</div>
+    <div class="qtab" onclick="switchTab('dashboard', this)">📊 Usage</div>
+    <div class="qtab" onclick="switchTab('notifs', this)">🔔 Alerts <span id="alertCount" style="color:var(--red);font-size:0.55rem;"></span></div>
+    <div class="qtab" onclick="switchTab('txns', this)">💳 Orders</div>
+  </div>
+
+  <!-- ── TAB: CHAT ── -->
+  <div class="tab-panel active" id="tab-chat">
+    <div class="messages" id="messages"></div>
+
+    <!-- QUICK PROMPTS -->
+    <div class="quick-prompts">
+      <button class="qp-btn" onclick="quickPrompt('How much power have I used today?')">⚡ Usage Today</button>
+      <button class="qp-btn" onclick="quickPrompt('Show new products in the market')">🛒 New Products</button>
+      <button class="qp-btn" onclick="quickPrompt('How can I reduce my electricity bill?')">💡 Save Energy</button>
+      <button class="qp-btn" onclick="quickPrompt('Show my recent orders')">📦 My Orders</button>
+      <button class="qp-btn" onclick="quickPrompt('What is my current balance and meter status?')">🔌 Meter Status</button>
+      <button class="qp-btn" onclick="quickPrompt('Give me a full power usage analysis and recommendations')">📈 Full Analysis</button>
+    </div>
+
+    <!-- INPUT -->
+    <div class="input-area">
+      <div class="voice-wave" id="voiceWave">
+        <div class="vw-bar"></div><div class="vw-bar"></div><div class="vw-bar"></div><div class="vw-bar"></div><div class="vw-bar"></div>
+        <span class="vw-label">Listening… speak now</span>
+      </div>
+      <div class="input-row">
+        <textarea class="chat-input" id="chatInput" placeholder="Ask VOLT anything about your power usage…" rows="1"
+          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMessage();}"
+          oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,80)+'px'"></textarea>
+        <button class="mic-btn" id="micBtn" onclick="toggleSpeech()" title="Voice input">🎤</button>
+        <button class="send-btn" id="sendBtn" onclick="sendMessage()" title="Send">➤</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TAB: DASHBOARD ── -->
+  <div class="tab-panel" id="tab-dashboard">
+    <div class="dash-tab">
+
+      <div class="dash-section">
+        <div class="ds-title">Live Power Gauge</div>
+        <div class="power-gauge-wrap">
+          <svg class="gauge-svg" viewBox="0 0 160 90">
+            <path d="M 10 85 A 70 70 0 0 1 150 85" fill="none" stroke="#0a1c2a" stroke-width="12" stroke-linecap="round"/>
+            <path d="M 10 85 A 70 70 0 0 1 150 85" fill="none" stroke="url(#gaugeGrad)" stroke-width="12" stroke-linecap="round"
+              stroke-dasharray="220" id="gaugeFill" stroke-dashoffset="66"/>
+            <defs>
+              <linearGradient id="gaugeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" style="stop-color:#00dcb4"/>
+                <stop offset="60%" style="stop-color:#f5c842"/>
+                <stop offset="100%" style="stop-color:#f55a72"/>
+              </linearGradient>
+            </defs>
+            <text x="80" y="70" text-anchor="middle" font-family="Orbitron,monospace" font-size="18" font-weight="700" fill="#00dcb4" id="gaugeText">70%</text>
+          </svg>
+          <div class="gauge-val" id="gaugeKwh">142 kWh</div>
+          <div class="gauge-label">Used this month</div>
+        </div>
+      </div>
+
+      <div class="dash-section">
+        <div class="ds-title">Usage Breakdown</div>
+        <div class="stat-mini-row">
+          <div class="stat-mini"><div class="sm-val" id="smToday">4.2</div><div class="sm-label">kWh Today</div><div class="sm-change up" id="smTodayC">↑ 12% vs avg</div></div>
+          <div class="stat-mini"><div class="sm-val" id="smBill">Ksh 2,840</div><div class="sm-label">Est. Bill</div><div class="sm-change" id="smBillC" style="color:var(--yellow);">Ksh 3,200 projected</div></div>
+          <div class="stat-mini"><div class="sm-val" id="smUnits">58</div><div class="sm-label">Units Left</div><div class="sm-change up">6–8 days remaining</div></div>
+          <div class="stat-mini"><div class="sm-val" id="smPeak">18:00</div><div class="sm-label">Peak Hour</div><div class="sm-change down">↑ High demand</div></div>
+        </div>
+      </div>
+
+      <div class="dash-section">
+        <div class="ds-title">Appliance Usage (Est.)</div>
+        <div id="usageBars"></div>
+      </div>
+
+      <div class="dash-section">
+        <div class="ds-title">AI Recommendations</div>
+        <div id="recCards"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── TAB: NOTIFICATIONS ── -->
+  <div class="tab-panel" id="tab-notifs">
+    <div class="dash-tab" id="notifList"></div>
+  </div>
+
+  <!-- ── TAB: TRANSACTIONS ── -->
+  <div class="tab-panel" id="tab-txns">
+    <div class="dash-tab">
+      <div class="dash-section">
+        <div class="ds-title">Recent Orders & Payments</div>
+        <div style="background:var(--surface2);border:1px solid var(--border);" id="txnList"></div>
+      </div>
+      <div class="dash-section" style="margin-top:0.5rem;">
+        <div class="ds-title">Electricity Payments</div>
+        <div style="background:var(--surface2);border:1px solid var(--border);" id="elecTxnList"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+ 
+ <div class="pay-toast" id="payToast"></div>
+ 
+
+<script src="payment.js"></script>
+</body>
+</html>

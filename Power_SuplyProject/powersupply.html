@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>PowerSupply System</title>
+<link rel="stylesheet" href="home.css">
+<link rel="icon" type="image/png" href="logo.png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet"/>
+<style>
+  .card-icon{font-size:2rem;margin-bottom:1.5rem; border: none; background: transparent;}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-brand">
+    <div class="brand-icon">⚡</div>
+    VOLTCONNECT
+  </a>
+  <ul class="nav-links">
+    <li><a href="#" class="active">Home</a></li>
+    <li><a href="#about" >About Us</a></li>
+    <li><a href="#support">Contact Us</a></li>
+    <li><a href="#team">Team</a></li>
+    <li><a href="#power-stats">Global Power</a></li>
+    <li><a href="#news">News</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="login.html" >Login</a></li>
+    <li><a href="register.html">Register</a></li>
+    <li><a href="marketplace.html">Market</a></li>
+    <li><a href="dashboard.html">Dashboard</a></li>
+  </ul>
+  <button class="nav-toggle-btn" onclick="toggleNav()">☰</button>
+ 
+</nav>
+
+<!-- HOME -->
+<section id="home">
+    <!-- ── HERO ── -->
+<section class="hero" id="hero">
+  <div class="hero-orb o1"></div>
+  <div class="hero-orb o2"></div>
+  <div class="hero-orb o3"></div>
+  <div class="hero-ring">
+    <div class="ring-circle"><div class="ring-dot"></div></div>
+    <div class="ring-circle"></div>
+    <div class="ring-circle"></div>
+  </div>
+
+  <div class="hero-content">
+    <div class="hero-eyebrow">⚡ Next-Gen Power Infrastructure. Powering Tomorrow, Today</div>
+    <h1 class="hero-title">
+      <span class="line1">Powering</span>
+      <span class="line2">The Future</span>
+    </h1>
+    <p class="hero-subtitle">Unlimited energy, intelligently managed.</p>
+    <p class="hero-desc">
+      Join over <strong style="color:var(--text)">2 million+</strong> homes and businesses on Africa's most advanced power supply network. Track usage, pay bills, and stay informed — all in one place.
+    </p>
+    <div class="hero-ctas">
+      <a href="register.html" class="cta-primary">⚡ Get Connected</a>
+      <a href="#power-stats" class="cta-secondary">📊 View Live Stats</a>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hs-num"><span class="counter" data-target="2400000" data-prefix="">2.4M</span></div>
+        <div class="hs-label">Active Connections</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hs-num"><span class="counter" data-target="99.9" data-suffix="%">99.9%</span></div>
+        <div class="hs-label">Uptime SLA</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hs-num"><span class="counter" data-target="47" data-suffix=" kWh">47 kWh</span></div>
+        <div class="hs-label">Avg Daily Delivery</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hs-num"><span class="counter" data-target="24" data-suffix="/7">24/7</span></div>
+        <div class="hs-label">Support</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── LIVE TICKER ── -->
+<div class="ticker-section">
+  <div class="ticker-track" id="tickerTrack">
+    <span class="ticker-item"><span class="ti-label">GLOBAL DEMAND</span> <span class="ti-val">28.4 TWh</span> <span class="ti-up">↑ 2.3%</span> <span class="ticker-sep">◆</span></span>
+    <span class="ticker-item"><span class="ti-label">SOLAR OUTPUT</span> <span class="ti-val">1,847 GW</span> <span class="ti-up">↑ 5.1%</span> <span class="ticker-sep">◆</span></span>
+    <span class="ticker-item"><span class="ti-label">KENYA GRID</span> <span class="ti-val">2,847 MW</span> <span class="ti-up">↑ 1.2%</span> <span class="ticker-sep">◆</span></span>
+    <span class="ticker-item"><span class="ti-label">WIND POWER</span> <span class="ti-val">2,103 GW</span> <span class="ti-down">↓ 0.8%</span> <span class="ticker-sep">◆</span></span>
+    <span class="ticker-item"><span class="ti-label">CO₂ SAVED TODAY</span> <span class="ti-val">4.2M tonnes</span> <span class="ti-up">↑ 3.7%</span> <span class="ticker-sep">◆</span></span>
+    <span class="ticker-item"><span class="ti-label">ACTIVE METERS</span> <span class="ti-val">2,412,847</span> <span class="ti-up">↑ live</span> <span class="ticker-sep">◆</span></span>
+    <span class="ticker-item"><span class="ti-label">HYDRO OUTPUT</span> <span class="ti-val">1,295 GW</span> <span class="ti-val">stable</span> <span class="ticker-sep">◆</span></span>
+    <span class="ticker-item"><span class="ti-label">AFRICA ELECTRIF.</span> <span class="ti-val">54.6%</span> <span class="ti-up">↑ 0.4%</span> <span class="ticker-sep">◆</span></span>
+    <!-- duplicate for seamless loop -->
+    <span class="ticker-item"><span class="ti-label">GLOBAL DEMAND</span> <span class="ti-val">28.4 TWh</span> <span class="ti-up">↑ 2.3%</span> <span class="ticker-sep">◆</span></span>
+    <span class="ticker-item"><span class="ti-label">SOLAR OUTPUT</span> <span class="ti-val">1,847 GW</span> <span class="ti-up">↑ 5.1%</span> <span class="ticker-sep">◆</span></span>
+    <span class="ticker-item"><span class="ti-label">KENYA GRID</span> <span class="ti-val">2,847 MW</span> <span class="ti-up">↑ 1.2%</span> <span class="ticker-sep">◆</span></span>
+    <span class="ticker-item"><span class="ti-label">WIND POWER</span> <span class="ti-val">2,103 GW</span> <span class="ti-down">↓ 0.8%</span> <span class="ticker-sep">◆</span></span>
+    <span class="ticker-item"><span class="ti-label">CO₂ SAVED TODAY</span> <span class="ti-val">4.2M tonnes</span> <span class="ti-up">↑ 3.7%</span> <span class="ticker-sep">◆</span></span>
+    <span class="ticker-item"><span class="ti-label">ACTIVE METERS</span> <span class="ti-val">2,412,847</span> <span class="ti-up">↑ live</span> <span class="ticker-sep">◆</span></span>
+    <span class="ticker-item"><span class="ti-label">HYDRO OUTPUT</span> <span class="ti-val">1,295 GW</span> <span class="ti-val">stable</span> <span class="ticker-sep">◆</span></span>
+    <span class="ticker-item"><span class="ti-label">AFRICA ELECTRIF.</span> <span class="ti-val">54.6%</span> <span class="ti-up">↑ 0.4%</span> <span class="ticker-sep">◆</span></span>
+  </div>
+</div>
+
+<!-- ── GLOBAL POWER STATS ── -->
+<section id="power-stats" class="section-pad">
+  <div class="container">
+    <div class="reveal">
+      <div class="sec-label">Live Data</div>
+      <h2 class="sec-title">Global Power Usage<br>at a Glance</h2>
+      <p class="sec-sub">Real-time average electricity consumption, generation capacity, and electrification rates across the world's major regions.</p>
+    </div>
+
+    <div class="power-grid reveal" style="margin-top:3rem;">
+      <div class="power-card">
+        <div class="pc-icon">🌍</div>
+        <div class="pc-region">Africa Average</div>
+        <div class="pc-value">0.6</div>
+        <div class="pc-unit">kWh per person per day</div>
+        <div class="pc-bar-track"><div class="pc-bar-fill" style="width:6%"></div></div>
+        <div class="pc-label">Sub-Saharan electrification rate: 48%. Rising fast with solar micro-grids and national grid expansion projects.</div>
+      </div>
+      <div class="power-card">
+        <div class="pc-icon">🌏</div>
+        <div class="pc-region">Asia Pacific Average</div>
+        <div class="pc-value">3.8</div>
+        <div class="pc-unit">kWh per person per day</div>
+        <div class="pc-bar-track"><div class="pc-bar-fill" style="width:38%"></div></div>
+        <div class="pc-label">China, India & SE Asia driving massive demand growth. Renewables now account for 32% of the regional mix.</div>
+      </div>
+      <div class="power-card">
+        <div class="pc-icon">🌎</div>
+        <div class="pc-region">Americas Average</div>
+        <div class="pc-value">12.4</div>
+        <div class="pc-unit">kWh per person per day</div>
+        <div class="pc-bar-track"><div class="pc-bar-fill" style="width:70%"></div></div>
+        <div class="pc-label">US averages 28 kWh/day; Latin America around 5. Grid modernization and EV charging driving new demand peaks.</div>
+      </div>
+      <div class="power-card">
+        <div class="pc-icon">🌐</div>
+        <div class="pc-region">Europe Average</div>
+        <div class="pc-value">13.8</div>
+        <div class="pc-unit">kWh per person per day</div>
+        <div class="pc-bar-track"><div class="pc-bar-fill" style="width:75%"></div></div>
+        <div class="pc-label">EU leads in renewable integration — wind and solar now cover 43% of electricity. Energy efficiency mandates are cutting demand.</div>
+      </div>
+    </div>
+
+    <!-- WORLD MAP + COUNTRY LIST -->
+    <div class="world-section">
+      <div class="world-map-wrap reveal-l">
+        <svg class="world-svg" viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg">
+          <!-- simplified continents -->
+          <rect width="800" height="400" fill="#0c1820"/>
+          <!-- Africa -->
+          <path d="M370 130 L420 120 L440 150 L445 200 L430 260 L410 290 L390 280 L370 240 L360 200 L355 160 Z" fill="rgba(0,220,180,0.08)" stroke="rgba(0,220,180,0.2)" stroke-width="1"/>
+          <!-- Europe -->
+          <path d="M340 60 L400 50 L420 80 L400 110 L360 120 L330 100 Z" fill="rgba(0,180,224,0.08)" stroke="rgba(0,180,224,0.15)" stroke-width="1"/>
+          <!-- Asia -->
+          <path d="M440 50 L620 40 L650 100 L630 160 L580 180 L500 170 L460 140 L440 100 Z" fill="rgba(168,85,247,0.06)" stroke="rgba(168,85,247,0.15)" stroke-width="1"/>
+          <!-- Americas -->
+          <path d="M100 70 L200 60 L220 150 L210 220 L190 280 L170 300 L140 260 L120 200 L100 140 Z" fill="rgba(245,200,66,0.06)" stroke="rgba(245,200,66,0.12)" stroke-width="1"/>
+          <!-- Australia -->
+          <path d="M600 220 L680 210 L700 260 L680 300 L620 305 L590 270 Z" fill="rgba(74,222,128,0.06)" stroke="rgba(74,222,128,0.12)" stroke-width="1"/>
+          <!-- Grid lines -->
+          <line x1="0" y1="200" x2="800" y2="200" stroke="rgba(0,220,180,0.05)" stroke-width="1"/>
+          <line x1="400" y1="0" x2="400" y2="400" stroke="rgba(0,220,180,0.05)" stroke-width="1"/>
+          <!-- Pulse dots — cities -->
+          <circle class="pulse-dot" cx="395" cy="185" r="4"/> <!-- Kenya -->
+          <circle class="pulse-dot" cx="370" cy="75" r="4"/>  <!-- London -->
+          <circle class="pulse-dot" cx="550" cy="105" r="4"/> <!-- Shanghai -->
+          <circle class="pulse-dot" cx="150" cy="120" r="4"/> <!-- New York -->
+          <circle class="pulse-dot" cx="640" cy="255" r="4"/> <!-- Sydney -->
+          <circle class="pulse-dot" cx="480" cy="140" r="4"/> <!-- Mumbai -->
+          <!-- Labels -->
+          <text x="395" y="200" font-size="14" fill="rgba(0,220,180,0.7)" font-family="monospace" text-anchor="middle">KENYA ⚡</text>
+          <text x="550" y="92" font-size="14" fill="rgba(0,180,224,0.6)" font-family="monospace" text-anchor="middle">SHANGHAI</text>
+          <text x="150" y="108" font-size="14" fill="rgba(245,200,66,0.6)" font-family="monospace" text-anchor="middle">NEW YORK</text>
+          <text x="640" y="242" font-size="14" fill="rgba(74,222,128,0.6)" font-family="monospace" text-anchor="middle">SYDNEY</text>
+          <!-- Connection lines -->
+          <line x1="395" y1="185" x2="370" y2="75" stroke="rgba(0,220,180,0.15)" stroke-width="0.5" stroke-dasharray="4 4">
+            <animate attributeName="stroke-dashoffset" from="0" to="-16" dur="2s" repeatCount="indefinite"/>
+          </line>
+          <line x1="395" y1="185" x2="550" y2="105" stroke="rgba(0,220,180,0.12)" stroke-width="0.5" stroke-dasharray="4 4">
+            <animate attributeName="stroke-dashoffset" from="0" to="-16" dur="2.5s" repeatCount="indefinite"/>
+          </line>
+          <line x1="395" y1="185" x2="150" y2="120" stroke="rgba(0,220,180,0.1)" stroke-width="0.5" stroke-dasharray="4 4">
+            <animate attributeName="stroke-dashoffset" from="0" to="-16" dur="3s" repeatCount="indefinite"/>
+          </line>
+        </svg>
+      </div>
+
+      <div class="world-stats-list reveal-r">
+        <div class="wsl-item">
+          <span class="wsl-flag">🇰🇪</span>
+          <div class="wsl-bar">
+            <div class="wsl-country">Kenya</div>
+            <div class="wsl-detail">Grid capacity: 2,847 MW · 75% electrified</div>
+            <div class="wsl-bar-track"><div class="wsl-bar-fill" style="width:75%"></div></div>
+          </div>
+          <span class="wsl-val">2.8 GW</span>
+        </div>
+        <div class="wsl-item">
+          <span class="wsl-flag">🇺🇸</span>
+          <div class="wsl-bar">
+            <div class="wsl-country">United States</div>
+            <div class="wsl-detail">Grid capacity: 1,180 GW · 100% electrified</div>
+            <div class="wsl-bar-track"><div class="wsl-bar-fill" style="width:100%"></div></div>
+          </div>
+          <span class="wsl-val">1.18 TW</span>
+        </div>
+        <div class="wsl-item">
+          <span class="wsl-flag">🇨🇳</span>
+          <div class="wsl-bar">
+            <div class="wsl-country">China</div>
+            <div class="wsl-detail">Grid capacity: 2,600 GW · 100% electrified</div>
+            <div class="wsl-bar-track"><div class="wsl-bar-fill" style="width:100%"></div></div>
+          </div>
+          <span class="wsl-val">2.6 TW</span>
+        </div>
+        <div class="wsl-item">
+          <span class="wsl-flag">🇩🇪</span>
+          <div class="wsl-bar">
+            <div class="wsl-country">Germany</div>
+            <div class="wsl-detail">Grid capacity: 240 GW · 58% renewable</div>
+            <div class="wsl-bar-track"><div class="wsl-bar-fill" style="width:82%;background:linear-gradient(90deg,var(--green),var(--teal))"></div></div>
+          </div>
+          <span class="wsl-val">240 GW</span>
+        </div>
+        <div class="wsl-item">
+          <span class="wsl-flag">🌍</span>
+          <div class="wsl-bar">
+            <div class="wsl-country">Africa (Average)</div>
+            <div class="wsl-detail">Electrification: 54.6% · Growing 4% annually</div>
+            <div class="wsl-bar-track"><div class="wsl-bar-fill" style="width:54%;background:linear-gradient(90deg,var(--orange),var(--yellow))"></div></div>
+          </div>
+          <span class="wsl-val">54.6%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── ENERGY FLOW ANIMATION ── -->
+<section id="energy-flow" class="section-pad-sm">
+  <div class="container">
+    <div class="reveal">
+      <div class="sec-label">Real-Time</div>
+      <h2 class="sec-title">Live Energy Flow Simulation</h2>
+      <p class="sec-sub">Visualizing electricity transmission across the national grid in real-time.</p>
+    </div>
+    <div class="flow-canvas-wrap reveal" style="margin-top:2rem;">
+      <canvas id="flowCanvas"></canvas>
+      <div class="flow-legend">
+        <div class="fl-item"><div class="fl-dot" style="background:var(--teal)"></div>Grid flow</div>
+        <div class="fl-item"><div class="fl-dot" style="background:var(--yellow)"></div>Solar</div>
+        <div class="fl-item"><div class="fl-dot" style="background:var(--teal2)"></div>Hydro</div>
+        <div class="fl-item"><div class="fl-dot" style="background:var(--green)"></div>Wind</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── VIDEO SECTION ── -->
+<section id="video-section" class="section-pad">
+  <div class="container">
+    <div class="reveal">
+      <div class="sec-label">Watch & Learn</div>
+      <h2 class="sec-title">Power Sector Insights</h2>
+      <p class="sec-sub">Stay informed with the latest energy videos, tutorials, and news from around the world.</p>
+    </div>
+    <div class="video-grid reveal" style="margin-top:3rem;">
+      <div>
+        <div class="video-main">
+          <div style="position:relative;">
+            <div class="video-label"><div class="live-dot2"></div>FEATURED</div>
+          </div>
+          <div class="video-main-inner">
+            <iframe src="https://www.youtube.com/embed/Vj6jCqFBOkk?autoplay=0&mute=1&rel=0&modestbranding=1" title="Global Energy Crisis Explained" allowfullscreen loading="lazy"></iframe>
+          </div>
+          <div class="video-caption">
+            <div class="video-cap-title">How Africa Is Leading the Global Solar Revolution</div>
+            <div class="video-cap-sub">DW Documentary · Energy · 22 min</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="video-side">
+        <div class="video-thumb" onclick="loadVideo('https://www.youtube.com/embed/FIlwdukPIcY')">
+          <div class="vt-img" style="background:linear-gradient(135deg,#1a3c5e,#0d2137);">
+            <div class="play-overlay">▶</div>
+            <span style="font-size:1.8rem;position:relative;z-index:1;">⚡</span>
+          </div>
+          <div class="vt-info">
+            <div class="vt-title">Kenya's Geothermal Power: East Africa's Green Energy Giant</div>
+            <div class="vt-meta">NatGeo Energy · 2025</div>
+          </div>
+          <div class="vt-dur">18:32</div>
+        </div>
+
+        <div class="video-thumb" onclick="loadVideo('https://www.youtube.com/embed/Yxt72aDjFgY')">
+          <div class="vt-img" style="background:linear-gradient(135deg,#1b5e20,#2e7d32);">
+            <div class="play-overlay">▶</div>
+            <span style="font-size:1.8rem;position:relative;z-index:1;">☀️</span>
+          </div>
+          <div class="vt-info">
+            <div class="vt-title">How Solar Panels Work — A Deep Dive into Photovoltaics</div>
+            <div class="vt-meta">Real Engineering · Science</div>
+          </div>
+          <div class="vt-dur">14:07</div>
+        </div>
+
+        <div class="video-thumb" onclick="loadVideo('https://www.youtube.com/embed/N8jqbKd8hVg')">
+          <div class="vt-img" style="background:linear-gradient(135deg,#3a0070,#7c3aed);">
+            <div class="play-overlay">▶</div>
+            <span style="font-size:1.8rem;position:relative;z-index:1;">🌍</span>
+          </div>
+          <div class="vt-info">
+            <div class="vt-title">The Future of Global Power Grids: Smart Energy Networks</div>
+            <div class="vt-meta">Bloomberg Green · Future</div>
+          </div>
+          <div class="vt-dur">31:15</div>
+        </div>
+
+        <div class="video-thumb" onclick="loadVideo('https://www.youtube.com/embed/IQAS48p97kM')">
+          <div class="vt-img" style="background:linear-gradient(135deg,#1a3c5e,#003087);">
+            <div class="play-overlay">▶</div>
+            <span style="font-size:1.8rem;position:relative;z-index:1;">💡</span>
+          </div>
+          <div class="vt-info">
+            <div class="vt-title">Smart Meters Explained — How to Monitor Your Power Usage</div>
+            <div class="vt-meta">PowerSupply Tutorial · Tips</div>
+          </div>
+          <div class="vt-dur">09:44</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── NEWS ── -->
+<section id="news" class="section-pad">
+  <div class="container">
+    <div class="reveal" style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-bottom:0;">
+      <div>
+        <div class="sec-label">Latest Updates</div>
+        <h2 class="sec-title">Energy News &<br>Industry Reports</h2>
+      </div>
+      <a href="#" style="font-family:'Rajdhani',sans-serif;font-weight:700;font-size:0.75rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--teal);text-decoration:none;border:1px solid rgba(0,220,180,0.25);padding:0.5rem 1rem;">All News →</a>
+    </div>
+
+    <div class="news-layout">
+      <div class="news-main">
+        <!-- Featured story -->
+        <div class="news-featured reveal">
+          <div class="nf-img">
+            <div class="news-img-bg" style="background:linear-gradient(135deg,#0d2137,#003087,#00577a);"></div>
+            <span style="font-size:5rem;position:relative;z-index:1;">⚡</span>
+          </div>
+          <div class="nf-body">
+            <span class="news-cat cat-energy">Energy</span>
+            <div class="news-title">Kenya Reaches 90% Electrification Target Ahead of 2030 Deadline</div>
+            <div class="news-excerpt">The Kenya Power and Lighting Company (KPLC) announced a landmark achievement today, connecting the 10 millionth household to the national grid — three years ahead of the government's Vision 2030 target. The milestone was driven by accelerated solar home systems and mini-grid deployments in rural areas.</div>
+            <div class="news-meta">
+              <span>📰 PowerSupply News</span>
+              <span class="dot">·</span>
+              <span>April 2026</span>
+              <span class="dot">·</span>
+              <span>5 min read</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- List items -->
+        <div class="news-list-item reveal">
+          <div class="nli-img" style="background:linear-gradient(135deg,#1b5e20,#2e7d32);">☀️</div>
+          <div>
+            <span class="news-cat cat-solar">Solar</span>
+            <div class="nli-title">Africa's Solar Capacity Doubles: 400 GW Added in 2024 Alone</div>
+            <div class="nli-meta">Bloomberg Green · March 2026 · 4 min read</div>
+          </div>
+        </div>
+        <div class="news-list-item reveal">
+          <div class="nli-img" style="background:linear-gradient(135deg,#3a0070,#6d28d9);">🔋</div>
+          <div>
+            <span class="news-cat cat-tech">Technology</span>
+            <div class="nli-title">Next-Generation Grid-Scale Batteries Cut Storage Costs by 60%</div>
+            <div class="nli-meta">MIT Energy Review · March 2026 · 6 min read</div>
+          </div>
+        </div>
+        <div class="news-list-item reveal">
+          <div class="nli-img" style="background:linear-gradient(135deg,#78350f,#92400e);">🛢️</div>
+          <div>
+            <span class="news-cat cat-policy">Policy</span>
+            <div class="nli-title">East African Energy Ministers Sign Historic Cross-Border Grid Pact</div>
+            <div class="nli-meta">The East African · Feb 2026 · 3 min read</div>
+          </div>
+        </div>
+        <div class="news-list-item reveal">
+          <div class="nli-img" style="background:linear-gradient(135deg,#0d2137,#1a3c5e);">💧</div>
+          <div>
+            <span class="news-cat cat-africa">Africa</span>
+            <div class="nli-title">Grand Ethiopian Renaissance Dam Now Powers 8 Countries</div>
+            <div class="nli-meta">Reuters Africa · Feb 2026 · 4 min read</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SIDEBAR -->
+      <div class="news-sidebar">
+        <div class="news-trending reveal">
+          <div class="nt-header">🔥 Trending Now</div>
+          <div class="trend-item">
+            <div class="trend-num">01</div>
+            <div>
+              <div class="trend-title">M-Pesa Electricity Token System Hits 5M Daily Transactions</div>
+              <div class="trend-time">2 hours ago</div>
+            </div>
+          </div>
+          <div class="trend-item">
+            <div class="trend-num">02</div>
+            <div>
+              <div class="trend-title">Load Shedding Ends in South Africa After 18-Month Crisis</div>
+              <div class="trend-time">5 hours ago</div>
+            </div>
+          </div>
+          <div class="trend-item">
+            <div class="trend-num">03</div>
+            <div>
+              <div class="trend-title">Wind Farm Off Tanzania Coast Will Power 3 Million Homes</div>
+              <div class="trend-time">Yesterday</div>
+            </div>
+          </div>
+          <div class="trend-item">
+            <div class="trend-num">04</div>
+            <div>
+              <div class="trend-title">Smart Meter Rollout: 500,000 New Installations This Quarter</div>
+              <div class="trend-time">2 days ago</div>
+            </div>
+          </div>
+          <div class="trend-item">
+            <div class="trend-num">05</div>
+            <div>
+              <div class="trend-title">Electricity Prices Drop 12% Across East Africa — Report</div>
+              <div class="trend-time">3 days ago</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="news-subscribe reveal">
+          <div class="ns-title">⚡ Stay Powered Up</div>
+          <div class="ns-sub">Get the latest energy news, grid alerts, and PowerSupply updates delivered to your inbox every morning.</div>
+          <div class="ns-input-row">
+            <input type="email" class="ns-input" placeholder="Your email address" id="nsEmail"/>
+            <button class="ns-btn" onclick="newsSubscribe()">Subscribe</button>
+          </div>
+        </div>
+
+        <!-- Quick Stats card -->
+        <div class="reveal" style="background:var(--bg);border:1px solid var(--border);padding:1.4rem;">
+          <div class="nt-header">📊 Today's Grid Stats</div>
+          <div style="display:flex;flex-direction:column;gap:0.7rem;margin-top:0.5rem;">
+            <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.78rem;padding:0.5rem 0;border-bottom:1px solid var(--border);">
+              <span style="color:var(--muted);">Peak Demand</span>
+              <span style="font-family:'Orbitron',monospace;font-size:0.75rem;color:var(--yellow);">2,914 MW</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.78rem;padding:0.5rem 0;border-bottom:1px solid var(--border);">
+              <span style="color:var(--muted);">Solar Share</span>
+              <span style="font-family:'Orbitron',monospace;font-size:0.75rem;color:var(--green);">38.2%</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.78rem;padding:0.5rem 0;border-bottom:1px solid var(--border);">
+              <span style="color:var(--muted);">Hydro Share</span>
+              <span style="font-family:'Orbitron',monospace;font-size:0.75rem;color:var(--teal2);">44.7%</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.78rem;padding:0.5rem 0;border-bottom:1px solid var(--border);">
+              <span style="color:var(--muted);">Outage Reports</span>
+              <span style="font-family:'Orbitron',monospace;font-size:0.75rem;color:var(--green);">3 minor</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.78rem;padding:0.5rem 0;">
+              <span style="color:var(--muted);">Grid Frequency</span>
+              <span style="font-family:'Orbitron',monospace;font-size:0.75rem;color:var(--teal);">50.02 Hz ✓</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SERVICES ── -->
+<section id="services" class="section-pad">
+  <div class="container">
+    <div class="reveal" style="text-align:center;margin-bottom:0;">
+      <div class="sec-label" style="justify-content:center;">What We Offer</div>
+      <h2 class="sec-title">Everything You Need,<br>Powered in One Place</h2>
+      <p class="sec-sub" style="margin:0 auto;">From bill payments to smart meter management, PowerSupply gives you complete control of your energy life.</p>
+    </div>
+    <div class="services-grid reveal">
+      <div class="service-card">
+        <div class="sc-icon">⚡</div>
+        <div class="sc-title">Pay Electricity Bills</div>
+        <div class="sc-desc">Pay your electricity tokens instantly via M-Pesa, card, or bank transfer. Get digital receipts and transaction history.</div>
+        <a href="dashboard.html" class="sc-link">Pay Now →</a>
+      </div>
+      <div class="service-card">
+        <div class="sc-icon">📊</div>
+        <div class="sc-title">Usage Monitoring</div>
+        <div class="sc-desc">Track your real-time energy consumption, set usage alerts, and get personalized tips to reduce your electricity bill.</div>
+        <a href="dashboard.html" class="sc-link">View Dashboard →</a>
+      </div>
+      <div class="service-card">
+        <div class="sc-icon">🛒</div>
+        <div class="sc-title">Electronics Market</div>
+        <div class="sc-desc">Shop energy-efficient electronics, meters, solar panels, and power accessories at competitive prices with fast delivery.</div>
+        <a href="marketplace.html" class="sc-link">Shop Now →</a>
+      </div>
+      <div class="service-card">
+        <div class="sc-icon">🔔</div>
+        <div class="sc-title">Outage Alerts</div>
+        <div class="sc-desc">Receive real-time notifications for scheduled maintenance and unplanned outages in your area before they happen.</div>
+        <a href="dashboard.html" class="sc-link" onclick="showToast('Opening dashboard...')">Set Alerts →</a>
+      </div>
+      <div class="service-card">
+        <div class="sc-icon">🌱</div>
+        <div class="sc-title">Green Energy Options</div>
+        <div class="sc-desc">Switch to 100% renewable energy sources — solar, wind, or hydro — and track your carbon footprint reduction.</div>
+        <a href="#" class="sc-link">Go Green →</a>
+      </div>
+      <div class="service-card">
+        <div class="sc-icon">🤝</div>
+        <div class="sc-title">24/7 Support</div>
+        <div class="sc-desc">Chat with our virtual assistant, call our emergency line, or WhatsApp our support team any time of day or night.</div>
+        <a href="#support" class="sc-link">Get Help →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── TESTIMONIALS ── -->
+<section id="testimonials" class="section-pad">
+  <div class="container">
+    <div class="reveal" style="text-align:center;margin-bottom:0;">
+      <div class="sec-label" style="justify-content:center;">Real Reviews</div>
+      <h2 class="sec-title">Trusted by 2M+<br>Customers</h2>
+    </div>
+    <div class="testimonials-track reveal" style="margin-top:3rem;overflow:hidden;">
+      <div class="testimonials-slider" id="testiSlider">
+        <!-- Cards 1-6 -->
+        <div class="testi-card">
+          <div class="testi-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+          <div class="testi-text">"Paying my electricity bill used to take an hour at the bank. Now it takes 30 seconds on my phone. PowerSupply has completely changed how I manage my home energy."</div>
+          <div class="testi-author"><div class="ta-av">AM</div><div><div class="ta-name">Amina Mwangi</div><div class="ta-loc">Nairobi, Kenya</div></div></div>
+        </div>
+        <div class="testi-card">
+          <div class="testi-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+          <div class="testi-text">"The usage dashboard showed me I was wasting power at night. I made small changes and cut my bill by 30% in the first month. Incredible tool."</div>
+          <div class="testi-author"><div class="ta-av">JO</div><div><div class="ta-name">James Odhiambo</div><div class="ta-loc">Kisumu, Kenya</div></div></div>
+        </div>
+        <div class="testi-card">
+          <div class="testi-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+          <div class="testi-text">"The outage alerts saved our restaurant so many times. We get a notification 2 hours before maintenance — enough time to prepare our backup generator."</div>
+          <div class="testi-author"><div class="ta-av">FK</div><div><div class="ta-name">Fatuma Karimi</div><div class="ta-loc">Mombasa, Kenya</div></div></div>
+        </div>
+        <div class="testi-card">
+          <div class="testi-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+          <div class="testi-text">"Bought a solar panel kit from the marketplace and installed it with the guides provided. The system paid for itself in 8 months. Highly recommend!"</div>
+          <div class="testi-author"><div class="ta-av">DW</div><div><div class="ta-name">David Waweru</div><div class="ta-loc">Nakuru, Kenya</div></div></div>
+        </div>
+        <div class="testi-card">
+          <div class="testi-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+          <div class="testi-text">"Customer support responded in under 5 minutes via WhatsApp. The team was friendly, knowledgeable, and actually solved my meter problem on the first call."</div>
+          <div class="testi-author"><div class="ta-av">GN</div><div><div class="ta-name">Grace Njeri</div><div class="ta-loc">Thika, Kenya</div></div></div>
+        </div>
+        <div class="testi-card">
+          <div class="testi-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+          <div class="testi-text">"As a small business, reliable power is everything. PowerSupply's SLA and monitoring tools give me confidence. Best investment I've made for my operations."</div>
+          <div class="testi-author"><div class="ta-av">PS</div><div><div class="ta-name">Peter Otieno Simiyu</div><div class="ta-loc">Eldoret, Kenya</div></div></div>
+        </div>
+        <!-- Duplicate set for seamless loop -->
+        <div class="testi-card">
+          <div class="testi-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+          <div class="testi-text">"Paying my electricity bill used to take an hour at the bank. Now it takes 30 seconds on my phone. PowerSupply has completely changed how I manage my home energy."</div>
+          <div class="testi-author"><div class="ta-av">AM</div><div><div class="ta-name">Amina Mwangi</div><div class="ta-loc">Nairobi, Kenya</div></div></div>
+        </div>
+        <div class="testi-card">
+          <div class="testi-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+          <div class="testi-text">"The usage dashboard showed me I was wasting power at night. I made small changes and cut my bill by 30% in the first month. Incredible tool."</div>
+          <div class="testi-author"><div class="ta-av">JO</div><div><div class="ta-name">James Odhiambo</div><div class="ta-loc">Kisumu, Kenya</div></div></div>
+        </div>
+        <div class="testi-card">
+          <div class="testi-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+          <div class="testi-text">"The outage alerts saved our restaurant so many times. We get a notification 2 hours before maintenance — enough time to prepare our backup generator."</div>
+          <div class="testi-author"><div class="ta-av">FK</div><div><div class="ta-name">Fatuma Karimi</div><div class="ta-loc">Mombasa, Kenya</div></div></div>
+        </div>
+        <div class="testi-card">
+          <div class="testi-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+          <div class="testi-text">"Bought a solar panel kit from the marketplace and installed it with the guides provided. The system paid for itself in 8 months. Highly recommend!"</div>
+          <div class="testi-author"><div class="ta-av">DW</div><div><div class="ta-name">David Waweru</div><div class="ta-loc">Nakuru, Kenya</div></div></div>
+        </div>
+        <div class="testi-card">
+          <div class="testi-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+          <div class="testi-text">"Customer support responded in under 5 minutes via WhatsApp. The team was friendly, knowledgeable, and actually solved my meter problem on the first call."</div>
+          <div class="testi-author"><div class="ta-av">GN</div><div><div class="ta-name">Grace Njeri</div><div class="ta-loc">Thika, Kenya</div></div></div>
+        </div>
+        <div class="testi-card">
+          <div class="testi-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+          <div class="testi-text">"As a small business, reliable power is everything. PowerSupply's SLA and monitoring tools give me confidence. Best investment I've made for my operations."</div>
+          <div class="testi-author"><div class="ta-av">PS</div><div><div class="ta-name">Peter Otieno Simiyu</div><div class="ta-loc">Eldoret, Kenya</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PARTNERS ── -->
+<div class="partners-section">
+  <div class="partners-track" id="partnersTrack">
+    <div class="partner-item"><span class="pi">🏛</span> KPLC</div>
+    <div class="partner-item"><span class="pi">☀️</span> SolarCity Africa</div>
+    <div class="partner-item"><span class="pi">💧</span> Statkraft Hydro</div>
+    <div class="partner-item"><span class="pi">🌬</span> Lake Turkana Wind</div>
+    <div class="partner-item"><span class="pi">🏦</span> Equity Bank</div>
+    <div class="partner-item"><span class="pi">📱</span> Safaricom M-Pesa</div>
+    <div class="partner-item"><span class="pi">🔋</span> GreenCharge EA</div>
+    <div class="partner-item"><span class="pi">🌍</span> African Dev. Bank</div>
+    <div class="partner-item"><span class="pi">⚡</span> REA Kenya</div>
+    <div class="partner-item"><span class="pi">🛰</span> SEACOM Networks</div>
+    <!-- Duplicate -->
+    <div class="partner-item"><span class="pi">🏛</span> KPLC</div>
+    <div class="partner-item"><span class="pi">☀️</span> SolarCity Africa</div>
+    <div class="partner-item"><span class="pi">💧</span> Statkraft Hydro</div>
+    <div class="partner-item"><span class="pi">🌬</span> Lake Turkana Wind</div>
+    <div class="partner-item"><span class="pi">🏦</span> Equity Bank</div>
+    <div class="partner-item"><span class="pi">📱</span> Safaricom M-Pesa</div>
+    <div class="partner-item"><span class="pi">🔋</span> GreenCharge EA</div>
+    <div class="partner-item"><span class="pi">🌍</span> African Dev. Bank</div>
+    <div class="partner-item"><span class="pi">⚡</span> REA Kenya</div>
+    <div class="partner-item"><span class="pi">🛰</span> SEACOM Networks</div>
+  </div>
+</div>
+</section> 
+
+<!-- ABOUT -->
+<section id="about">
+  <h1 class="about-title">About Us</h1>
+  <div class="about-grid reveal">
+    <div class="about-card">
+      <div class="card-icon">🏢</div>
+      <div class="card-title">Who We Are</div>
+      <div class="card-text">We are a team of experts who develop different types of websites and apps for businesses and organizations, using modern technological trends to solve real-world problems in society.</div>
+    </div>
+    <div class="about-card">
+      <div class="card-icon">🎯</div>
+      <div class="card-title">Our Vision</div>
+      <div class="card-text">To deliver high-quality solutions that solve real problems — powering homes and workplaces with unlimited, reliable, and sustainable power supply systems globally.</div>
+    </div>
+    <div class="about-card">
+      <div class="card-icon">🌍</div>
+      <div class="card-title">Our Mission</div>
+      <div class="card-text">To create a global community where technology is a tool for positive change, enabling diverse voices to contribute to the future of software development and energy access.</div>
+    </div>
+  </div>
+</section>
+
+<!-- OBJECTIVES -->
+<section id="objectives">
+  <div class="obj-inner reveal">
+    <div>
+      <div class="obj-label">Strategic Goals</div>
+      <h2 class="obj-head">Our<br>Objectives</h2>
+    </div>
+    <ul class="obj-list">
+      <li>
+        <div class="obj-bullet"></div>
+        <span>We encourage creativity and innovation to solve different world problems, building tools that matter and make a lasting impact on communities.</span>
+      </li>
+      <li>
+        <div class="obj-bullet"></div>
+        <span>We promote diversity and inclusion across all our development teams, ensuring every voice shapes the products we build.</span>
+      </li>
+      <li>
+        <div class="obj-bullet"></div>
+        <span>We make good websites and apps to improve business operations and the working efficiency of different organisations.</span>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- TEAM -->
+<section id="team">
+  <div class="section-header">
+    <p class="section-label">The People</p>
+    <h2 class="section-title reveal">C◈DEX HUNTERS Team</h2>
+  </div>
+  <div class="team-grid reveal">
+    <div class="team-card">
+      <div class="team-avatar"><img src="jonte.jpeg" alt="JJ"></div>
+      <div class="team-name">JB Jones</div>
+      <div class="team-role">The code architect</div>
+      <div class="team-role-badge">Backend Developer</div>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar"><img src="waswa.jpeg" alt="WS"></div>
+      <div class="team-name">Jackson Waswa</div>
+      <div class="team-role">UI craftsman</div>
+      <div class="team-role-badge">Frontend Developer</div>
+    </div>
+    <div class="team-card highlight">
+      <div class="team-avatar"> <img src="Tiger.png" alt="SM"></div>
+      <div class="team-name">Sheddy Mboya</div>
+      <div class="team-role">Leading with vision</div>
+      <div class="team-role-badge">Chairperson · Fullstack</div>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar"><img src="florence.jpeg" alt="FL"></div>
+      <div class="team-name">Florence</div>
+      <div class="team-role">Visual storyteller</div>
+      <div class="team-role-badge">Web Designer</div>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar"><img src="nina.jpeg" alt="NK"></div>
+      <div class="team-name">Ninah Kemuma</div>
+      <div class="team-role">Experience designer</div>
+      <div class="team-role-badge">UI/UX Designer</div>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar"><img src="okeyo.jpeg" alt="OM"></div>
+      <div class="team-name">Okeyo Maxwel</div>
+      <div class="team-role">Interface builder</div>
+      <div class="team-role-badge">Frontend Developer</div>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar"><img src="paul.jpeg" alt="PL"></div>
+      <div class="team-name">Paul Walker</div>
+      <div class="team-role">Code artisan</div>
+      <div class="team-role-badge">Frontend Developer</div>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar"><img src="sam.jpeg" alt="SO"></div>
+      <div class="team-name">Samson Otieno</div>
+      <div class="team-role">Dynamic interfaces</div>
+      <div class="team-role-badge">Frontend Developer</div>
+    </div>
+    <div class="team-card" style="grid-column:2;">
+      <div class="team-avatar" style="background:linear-gradient(135deg,#b48ead,#7a5c8a);">JJ</div>
+      <div class="team-name">Jansen Jared</div>
+      <div class="team-role">Machine intelligence</div>
+      <div class="team-role-badge">AI Engineer</div>
+    </div>
+  </div>
+</section>
+
+<!-- SUPPORT -->
+<section id="support">
+  <h2 class="support-title reveal">Contact Our Support Team</h2>
+  <p class="support-sub reveal">Available 24/7 for any help you need</p>
+  <div class="contact-row reveal">
+    <a href="https://wa.me/254790524398" target="_blank" class="contact-chip">
+      <i class="fa-brands fa-whatsapp"></i>
+      <span class="chip-label">WhatsApp</span>
+    </a>
+    <a href="https://instagram.com/blackflyingtiges" target="_blank" class="contact-chip">
+      <i class="fa-brands fa-instagram"></i>
+      <span class="chip-label">Instagram</span>
+    </a>
+    <a href="https://www.facebook.com/profile.php?id=61586521267702" target="_blank" class="contact-chip">
+      <i class="fa-brands fa-facebook"></i>
+      <span class="chip-label">Facebook</span>
+    </a>
+    <a href="https://t.me/feexysheddy" target="_blank" class="contact-chip">
+      <i class="fa-brands fa-telegram"></i>
+      <span class="chip-label">Telegram</span>
+    </a>
+    <a href="tel:+254790524398" class="contact-chip">
+      <span class="chip-icon">📞</span>
+      <span class="chip-label">+254790524398</span>
+    </a>
+    <a href="mailto:shedyy708@gmail.com" class="contact-chip">
+      <span class="chip-icon">✉️</span>
+      <span class="chip-label">shedyy708@gmail.com</span>
+    </a>
+    <a href="#support" class="contact-chip" onclick="togglePanel()">
+      <span class="chip-icon">🤖</span>
+      <span class="chip-label">Virtual Assistant</span>
+    </a>
+  </div>
+</section>
+
+<!-- COMMENTS -->
+<section id="comments">
+  <div class="section-header">
+    <p class="section-label">Testimonials</p>
+    <h2 class="section-title reveal">What Clients Say</h2>
+  </div>
+  <div class="comments-grid reveal" id="commentsGrid">
+    <div class="comment-card">
+      <div class="comment-stars">
+        <span class="star filled">★</span><span class="star filled">★</span>
+        <span class="star filled">★</span><span class="star filled">★</span>
+        <span class="star filled">★</span>
+      </div>
+      <p class="comment-text">"This website is amazing, no more stress! Managing power supply bills has never been this smooth and intuitive."</p>
+      <div class="comment-author">
+        <div class="author-avatar">BA</div>
+        <div>
+          <div class="author-name">Barry Allan</div>
+          <div class="author-label">Verified Customer</div>
+        </div>
+      </div>
+    </div>
+    <div class="comment-card">
+      <div class="comment-stars">
+        <span class="star filled">★</span><span class="star filled">★</span>
+        <span class="star filled">★</span><span class="star filled">★</span>
+        <span class="star">★</span>
+      </div>
+      <p class="comment-text">"Easy to pay electricity bills, I highly recommend it. The dashboard is clean and everything works perfectly."</p>
+      <div class="comment-author">
+        <div class="author-avatar">JS</div>
+        <div>
+          <div class="author-name">John Smith</div>
+          <div class="author-label">Business Owner</div>
+        </div>
+      </div>
+    </div>
+    <div class="comment-card">
+      <div class="comment-stars">
+        <span class="star filled">★</span><span class="star filled">★</span>
+        <span class="star filled">★</span><span class="star filled">★</span>
+        <span class="star filled">★</span>
+      </div>
+      <p class="comment-text">"Very fast and user-friendly design. I can track my power usage in real-time. Absolutely love it!"</p>
+      <div class="comment-author">
+        <div class="author-avatar">JW</div>
+        <div>
+          <div class="author-name">Joyce Wairimu</div>
+          <div class="author-label">Homeowner</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RATE US -->
+<section id="rate">
+  <div class="rate-inner">
+    <div class="section-header">
+      <p class="section-label reveal">Feedback</p>
+      <h2 class="section-title reveal">Rate Us</h2>
+    </div>
+    <div style="text-align:center;margin-bottom:2rem;">
+      <span class="rate-cta">⚡ We'd love to hear your feedback!</span>
+    </div>
+    <div class="form-card reveal">
+      <form id="rateForm">
+        <div class="form-group">
+          <label for="rname">Your Name</label>
+          <input type="text" id="rname" placeholder="Enter your name" required/>
+        </div>
+        <div class="form-group">
+          <label for="remail">Your Email</label>
+          <input type="email" id="remail" placeholder="Enter your email" required/>
+        </div>
+        <div class="form-group">
+          <label>Rate Your Experience</label>
+          <div class="star-rating">
+            <input type="radio" name="rating" id="s5" value="5"/>
+            <label for="s5" title="5 stars">★</label>
+            <input type="radio" name="rating" id="s4" value="4"/>
+            <label for="s4" title="4 stars">★</label>
+            <input type="radio" name="rating" id="s3" value="3"/>
+            <label for="s3" title="3 stars">★</label>
+            <input type="radio" name="rating" id="s2" value="2"/>
+            <label for="s2" title="2 stars">★</label>
+            <input type="radio" name="rating" id="s1" value="1"/>
+            <label for="s1" title="1 star">★</label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="rcomment">Your Comment</label>
+          <textarea id="rcomment" rows="4" placeholder="Tell us what you think..." required></textarea>
+        </div>
+        <button type="submit" class="btn-submit">
+          <span>Submit Rating</span> <span>⚡</span>
+        </button>
+      </form>
+      <div class="form-success" id="formSuccess">
+        <div class="success-icon">✅</div>
+        <p>Thank you for your feedback!</p>
+        <p style="color:var(--muted);font-size:0.8rem;margin-top:0.5rem;font-family:'DM Sans',sans-serif;">Your review has been added to our testimonials.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     VOLT AI PANEL
+══════════════════════════════════════ -->
+<button class="ai-trigger" id="aiTrigger" onclick="togglePanel()" title="Open VOLT AI">
+  <span id="triggerIcon">⚡</span>
+  <div class="notif-badge" id="notifBadge" style="display:none;">3</div>
+</button>
+
+<div class="ai-panel" id="aiPanel">
+
+  <!-- HEADER -->
+  <div class="panel-hdr">
+    <div class="volt-avatar">⚡</div>
+    <div class="volt-info">
+      <div class="volt-name">VOLT AI <span class="speaking-wave" id="speakWave"><span class="sw-bar"></span><span class="sw-bar"></span><span class="sw-bar"></span><span class="sw-bar"></span><span class="sw-bar"></span></span></div>
+      <div class="volt-status"><div class="status-dot"></div><span id="voltStatus">PowerSupply Intelligence · Online</span></div>
+    </div>
+    <div class="panel-actions">
+      <button class="pa-btn" onclick="clearChat()" title="Clear chat">🗑</button>
+      <button class="pa-btn" onclick="togglePanel()" title="Close">✕</button>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="quick-tabs">
+    <div class="qtab active" onclick="switchTab('chat', this)">💬 Chat</div>
+    <div class="qtab" onclick="switchTab('dashboard', this)">📊 Usage</div>
+    <div class="qtab" onclick="switchTab('notifs', this)">🔔 Alerts <span id="alertCount" style="color:var(--red);font-size:0.55rem;"></span></div>
+    <div class="qtab" onclick="switchTab('txns', this)">💳 Orders</div>
+  </div>
+
+  <!-- ── TAB: CHAT ── -->
+  <div class="tab-panel active" id="tab-chat">
+    <div class="messages" id="messages"></div>
+
+    <!-- QUICK PROMPTS -->
+    <div class="quick-prompts">
+      <button class="qp-btn" onclick="quickPrompt('How much power have I used today?')">⚡ Usage Today</button>
+      <button class="qp-btn" onclick="quickPrompt('Show new products in the market')">🛒 New Products</button>
+      <button class="qp-btn" onclick="quickPrompt('How can I reduce my electricity bill?')">💡 Save Energy</button>
+      <button class="qp-btn" onclick="quickPrompt('Show my recent orders')">📦 My Orders</button>
+      <button class="qp-btn" onclick="quickPrompt('What is my current balance and meter status?')">🔌 Meter Status</button>
+      <button class="qp-btn" onclick="quickPrompt('Give me a full power usage analysis and recommendations')">📈 Full Analysis</button>
+    </div>
+
+    <!-- INPUT -->
+    <div class="input-area">
+      <div class="voice-wave" id="voiceWave">
+        <div class="vw-bar"></div><div class="vw-bar"></div><div class="vw-bar"></div><div class="vw-bar"></div><div class="vw-bar"></div>
+        <span class="vw-label">Listening… speak now</span>
+      </div>
+      <div class="input-row">
+        <textarea class="chat-input" id="chatInput" placeholder="Ask VOLT anything about your power usage…" rows="1"
+          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMessage();}"
+          oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,80)+'px'"></textarea>
+        <button class="mic-btn" id="micBtn" onclick="toggleSpeech()" title="Voice input">🎤</button>
+        <button class="send-btn" id="sendBtn" onclick="sendMessage()" title="Send">➤</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TAB: DASHBOARD ── -->
+  <div class="tab-panel" id="tab-dashboard">
+    <div class="dash-tab">
+
+      <div class="dash-section">
+        <div class="ds-title">Live Power Gauge</div>
+        <div class="power-gauge-wrap">
+          <svg class="gauge-svg" viewBox="0 0 160 90">
+            <path d="M 10 85 A 70 70 0 0 1 150 85" fill="none" stroke="#0a1c2a" stroke-width="12" stroke-linecap="round"/>
+            <path d="M 10 85 A 70 70 0 0 1 150 85" fill="none" stroke="url(#gaugeGrad)" stroke-width="12" stroke-linecap="round"
+              stroke-dasharray="220" id="gaugeFill" stroke-dashoffset="66"/>
+            <defs>
+              <linearGradient id="gaugeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" style="stop-color:#00dcb4"/>
+                <stop offset="60%" style="stop-color:#f5c842"/>
+                <stop offset="100%" style="stop-color:#f55a72"/>
+              </linearGradient>
+            </defs>
+            <text x="80" y="70" text-anchor="middle" font-family="Orbitron,monospace" font-size="18" font-weight="700" fill="#00dcb4" id="gaugeText">70%</text>
+          </svg>
+          <div class="gauge-val" id="gaugeKwh">142 kWh</div>
+          <div class="gauge-label">Used this month</div>
+        </div>
+      </div>
+
+      <div class="dash-section">
+        <div class="ds-title">Usage Breakdown</div>
+        <div class="stat-mini-row">
+          <div class="stat-mini"><div class="sm-val" id="smToday">4.2</div><div class="sm-label">kWh Today</div><div class="sm-change up" id="smTodayC">↑ 12% vs avg</div></div>
+          <div class="stat-mini"><div class="sm-val" id="smBill">Ksh 2,840</div><div class="sm-label">Est. Bill</div><div class="sm-change" id="smBillC" style="color:var(--yellow);">Ksh 3,200 projected</div></div>
+          <div class="stat-mini"><div class="sm-val" id="smUnits">58</div><div class="sm-label">Units Left</div><div class="sm-change up">6–8 days remaining</div></div>
+          <div class="stat-mini"><div class="sm-val" id="smPeak">18:00</div><div class="sm-label">Peak Hour</div><div class="sm-change down">↑ High demand</div></div>
+        </div>
+      </div>
+
+      <div class="dash-section">
+        <div class="ds-title">Appliance Usage (Est.)</div>
+        <div id="usageBars"></div>
+      </div>
+
+      <div class="dash-section">
+        <div class="ds-title">AI Recommendations</div>
+        <div id="recCards"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── TAB: NOTIFICATIONS ── -->
+  <div class="tab-panel" id="tab-notifs">
+    <div class="dash-tab" id="notifList"></div>
+  </div>
+
+  <!-- ── TAB: TRANSACTIONS ── -->
+  <div class="tab-panel" id="tab-txns">
+    <div class="dash-tab">
+      <div class="dash-section">
+        <div class="ds-title">Recent Orders & Payments</div>
+        <div style="background:var(--surface2);border:1px solid var(--border);" id="txnList"></div>
+      </div>
+      <div class="dash-section" style="margin-top:0.5rem;">
+        <div class="ds-title">Electricity Payments</div>
+        <div style="background:var(--surface2);border:1px solid var(--border);" id="elecTxnList"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="brand-name">⚡ POWER SUPPLY SYSTEM.</div>
+      <p>Powering your homes and work places with unlimited power supply. Reliable, sustainable, always on.</p>
+      <div class="footer-badge">⚡ 99.9% Uptime Guaranteed</div>
+      <div class="footer-social">
+        <a href="https://x.com/Shedyy352450" target="_blank" class="social-icon">𝕏</a>
+        <a href="https://www.facebook.com/profile.php?id=61586521267702" target="_blank" class="social-icon"><i class="fa-brands fa-facebook"></i></a>
+        <a href="https://linkedin.com/in/Dion Wayne" target="_blank" class="social-icon"><i class="fa-brands fa-linkedin"></i></a>
+        <a href="https://github.com/Mr-Robot486" target="_blank" class="social-icon"><i class="fa-brands fa-github"></i></a>
+        <a href="https://instagram.com/blackflyingtiges" target="_blank" class="social-icon"><i class="fa-brands fa-instagram"></i></a>
+        <a href="https://youtube.com/@shedyy-o3g5b?si=j0LZ7-x8EGvO5xB4" target="_blank" class="social-icon"><i class="fa-brands fa-youtube"></i></a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Features</a></li>
+        <li><a href="#">Pricing</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#support">Contact Us</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Resources</h4>
+      <ul>
+        <li><a href="#">Blog</a></li>
+        <li><a href="#">Docs</a></li>
+        <li><a href="#">FAQ</a></li>
+        <li><a href="#support">Support</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Subscribe</h4>
+      <p style="font-size:0.8rem;color:var(--muted);margin-bottom:1rem;line-height:1.6;">Get the latest updates straight to your inbox.</p>
+      <div class="subscribe-row">
+        <input type="email" placeholder="Your email" id="subEmail"/>
+        <button onclick="handleSubscribe()">Subscribe</button>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>&copy; 2026 ⚡ PowerSupply. All rights reserved.</span>
+    <div class="socials">
+      <a href="#">Twitter</a>
+      <a href="#">Facebook</a>
+      <a href="#">LinkedIn</a>
+      <a href="#">GitHub</a>
+      <a href="#">Instagram</a>
+      <a href="#">YouTube</a>
+    </div>
+  </div>
+</footer>
+
+<!-- BACK TO TOP -->
+<div class="back-top" id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script src="powerSupply.js"></script>
+</body>
+</html>

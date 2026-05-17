@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>PowerSupply — Register as Admin</title>
+<link rel="stylesheet" href="admin.css">
+<link rel="icon" type="image/png" href="logo.png"/>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=Orbitron:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+<!-- ── STEP INDICATOR ── -->
+<div class="steps-bar" id="stepsBar">
+  <div class="step-item">
+    <div class="step-circle active" id="sc1">1</div>
+    <div class="step-label active" id="sl1">Personal</div>
+  </div>
+  <div class="step-item">
+    <div class="step-circle" id="sc2">2</div>
+    <div class="step-label" id="sl2">Category</div>
+  </div>
+  <div class="step-item">
+    <div class="step-circle" id="sc3">3</div>
+    <div class="step-label" id="sl3">Security</div>
+  </div>
+  <div class="step-item">
+    <div class="step-circle" id="sc4">4</div>
+    <div class="step-label" id="sl4">Confirm</div>
+  </div>
+</div>
+
+<!-- ── MAIN CARD ── -->
+<div id="adminReg" class="adminReg">
+  <div class="admin-login-card">
+
+    <!-- HEADER -->
+    <div class="alc-header">
+      <div class="admin-logo">
+        <div class="admin-hex">⚙</div>
+        <span class="admin-brand">ADMIN PANEL</span>
+      </div>
+      <div class="alc-title">Register as an Authorised Admin<br>Sell products and become our partner</div>
+      <div class="alc-sub">
+        PowerSupply System — Restricted Area.<br>
+        All fields marked with <span class="req">*</span> are required.
+      </div>
+    </div>
+
+    <!-- ═══ SCREEN 1 — PERSONAL INFO ═══ -->
+    <div class="alc-body">
+      <div class="form-screen show" id="screen1">
+        <div class="form-msg" id="msg1"></div>
+
+        <div class="field-row">
+          <div class="aaf">
+            <label>First Name <span class="req">*</span></label>
+            <div class="aai-w">
+              <span class="ai-icon">👤</span>
+              <input class="admin-input" type="text" id="regFirst" placeholder="e.g. Mboya" oninput="lv('regFirst','firstErr','name')"/>
+            </div>
+            <div class="field-err" id="firstErr">First name is required</div>
+          </div>
+          <div class="aaf">
+            <label>Last Name <span class="req">*</span></label>
+            <div class="aai-w">
+              <span class="ai-icon">👤</span>
+              <input class="admin-input" type="text" id="regLast" placeholder="e.g. Sheddy" oninput="lv('regLast','lastErr','name')"/>
+            </div>
+            <div class="field-err" id="lastErr">Last name is required</div>
+          </div>
+        </div>
+
+        <div class="aaf">
+          <label>Email Address <span class="req">*</span></label>
+          <div class="aai-w">
+            <span class="ai-icon">✉️</span>
+            <input class="admin-input" type="email" id="regEmail" placeholder="e.g. sheddy@example.com" oninput="lv('regEmail','emailErr','email')"/>
+          </div>
+          <div class="field-err" id="emailErr">Enter a valid email address</div>
+        </div>
+
+        <div class="aaf">
+          <label>Phone Number <span class="req">*</span></label>
+          <div class="aai-w">
+            <span class="ai-icon">📱</span>
+            <input class="admin-input" type="tel" id="regPhone" placeholder="e.g. +254712345678" oninput="lv('regPhone','phoneErr','phone')"/>
+          </div>
+          <div class="field-err" id="phoneErr">Enter a valid phone number</div>
+        </div>
+
+        <div class="aaf">
+          <label>National ID / Passport <span class="req">*</span></label>
+          <div class="aai-w">
+            <span class="ai-icon">🪪</span>
+            <input class="admin-input" type="text" id="regId" placeholder="e.g. 12345678" oninput="lv('regId','idErr','id')"/>
+          </div>
+          <div class="field-err" id="idErr">ID/Passport number is required</div>
+        </div>
+
+        <div class="btn-row">
+          <button class="admin-login-btn" onclick="step1Next()">Next — Category →</button>
+        </div>
+
+        <div class="login-link">Already registered? <a onclick="goToLogin()">Login to Admin Panel →</a></div>
+      </div>
+
+      <!-- ═══ SCREEN 2 — CATEGORY ═══ -->
+      <div class="form-screen" id="screen2">
+        <div class="form-msg" id="msg2"></div>
+
+        <div class="aaf">
+          <label>Register As <span class="req">*</span></label>
+          <div class="cat-grid" id="catGrid">
+            <div class="cat-card" data-val="ac_electricity" onclick="selectCat(this)">
+              <div class="cat-icon">⚡</div>
+              <div class="cat-name">AC Electricity</div>
+              <div class="cat-desc">National grid power provider or reseller</div>
+            </div>
+            <div class="cat-card" data-val="solar_electricity" onclick="selectCat(this)">
+              <div class="cat-icon">☀️</div>
+              <div class="cat-name">Solar Electricity</div>
+              <div class="cat-desc">Solar energy systems and installations</div>
+            </div>
+            <div class="cat-card" data-val="product_vendor" onclick="selectCat(this)">
+              <div class="cat-icon">🛒</div>
+              <div class="cat-name">Product Vendor</div>
+              <div class="cat-desc">Sell electronics and power accessories</div>
+            </div>
+            <div class="cat-card" data-val="other" onclick="selectCat(this)">
+              <div class="cat-icon">🔧</div>
+              <div class="cat-name">Other</div>
+              <div class="cat-desc">Energy consulting or other services</div>
+            </div>
+          </div>
+          <div class="field-err" id="catErr">Please select a category</div>
+        </div>
+
+        <div class="aaf" style="margin-top:0.5rem;">
+          <label>Business / Organisation Name</label>
+          <div class="aai-w">
+            <span class="ai-icon">🏢</span>
+            <input class="admin-input" type="text" id="regBiz" placeholder="e.g. SolarTech Kenya Ltd (optional)"/>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn-back" onclick="goScreen(1,2)">← Back</button>
+          <button class="admin-login-btn" onclick="step2Next()">Next — Security →</button>
+        </div>
+      </div>
+
+      <!-- ═══ SCREEN 3 — SECURITY ═══ -->
+      <div class="form-screen" id="screen3">
+        <div class="form-msg" id="msg3"></div>
+
+        <div class="aaf">
+          <label>Admin Access Code <span class="req">*</span></label>
+          <div class="aai-w">
+            <span class="ai-icon">🔑</span>
+            <input class="admin-input code-input" type="text" id="regCode" placeholder="XXXXXXXX" maxlength="8" oninput="this.value=this.value.toUpperCase();lv('regCode','codeErr','code')"/>
+          </div>
+          <div class="field-err" id="codeErr">Invalid admin code — must be 8 characters</div>
+          <div class="code-hint">
+            Enter the secret admin code provided by PowerSupply.<br>
+            Default demo code: <span>PSADMIN8</span>
+          </div>
+        </div>
+
+        <div class="aaf">
+          <label>Create Password <span class="req">*</span></label>
+          <div class="aai-w">
+            <span class="ai-icon">🔒</span>
+            <input class="admin-input" type="password" id="regPass" placeholder="Min 8 characters" oninput="checkPwStrength()"/>
+          </div>
+          <div class="pw-strength">
+            <div class="pw-bar">
+              <div class="pw-seg" id="pws1"></div>
+              <div class="pw-seg" id="pws2"></div>
+              <div class="pw-seg" id="pws3"></div>
+              <div class="pw-seg" id="pws4"></div>
+            </div>
+            <div class="pw-label" id="pwLabel">Enter a password</div>
+          </div>
+          <div class="field-err" id="passErr">Password must be at least 8 characters</div>
+        </div>
+
+        <div class="aaf">
+          <label>Confirm Password <span class="req">*</span></label>
+          <div class="aai-w">
+            <span class="ai-icon">🔐</span>
+            <input class="admin-input" type="password" id="regPass2" placeholder="Re-enter password" oninput="lv('regPass2','pass2Err','confirm')"/>
+          </div>
+          <div class="field-err" id="pass2Err">Passwords do not match</div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn-back" onclick="goScreen(2,3)">← Back</button>
+          <button class="admin-login-btn" onclick="step3Next()">Review Details →</button>
+        </div>
+      </div>
+
+      <!-- ═══ SCREEN 4 — REVIEW & CONFIRM ═══ -->
+      <div class="form-screen" id="screen4">
+        <div class="form-msg" id="msg4"></div>
+
+        <div style="font-family:'Rajdhani',sans-serif;font-weight:700;font-size:0.82rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--yellow);margin-bottom:1rem;">Review Your Information</div>
+
+        <div class="review-grid" id="reviewGrid"></div>
+
+        <div class="terms-row" style="margin-top:1rem;">
+          <div class="custom-cb" id="termsCb" onclick="toggleTerms()"></div>
+          <div class="terms-text">
+            I confirm that all information is accurate and I am authorised to register as a PowerSupply admin.
+            I agree to the <a>Terms of Service</a> and <a>Admin Partner Agreement</a>.
+          </div>
+        </div>
+        <div class="field-err" id="termsErr">You must accept the terms to register</div>
+
+        <div class="btn-row">
+          <button class="btn-back" onclick="goScreen(3,4)">← Back</button>
+          <button class="admin-login-btn" id="submitBtn" onclick="submitRegistration()">⚙ Create Admin Account</button>
+        </div>
+      </div>
+
+      <!-- ═══ SUCCESS SCREEN ═══ -->
+      <div class="success-screen" id="successScreen">
+        <div class="success-hex">✓</div>
+        <div class="success-title">Admin Account Created!</div>
+        <div class="success-sub">
+          Your admin account has been successfully registered. You can now login to the PowerSupply Admin Panel.
+        </div>
+        <div class="success-creds" id="successCreds"></div>
+        <div class="success-sub" style="font-size:0.7rem;">
+          Save your credentials securely. Your account is now active and awaiting super-admin approval for full access.
+        </div>
+        <button class="go-login-btn" onclick="redirectToLogin()">⚙ Login to Admin Panel →</button>
+      </div>
+
+    </div><!-- /alc-body -->
+  </div><!-- /admin-login-card -->
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="adminReg.js"></script>
+</body>
+</html>

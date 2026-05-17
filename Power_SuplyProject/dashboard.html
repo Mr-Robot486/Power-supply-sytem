@@ -1,0 +1,1933 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>PowerSupply — My Dashboard</title>
+<link rel="icon" type="image/png" href="logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=Orbitron:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#030a0f;--surface:#080f17;--surface2:#0c1820;--surface3:#101f2d;
+  --border:rgba(0,220,180,0.1);--border2:rgba(0,220,180,0.2);
+  --teal:#00dcb4;--teal2:#00b4e0;--yellow:#f5c842;--orange:#f59232;
+  --red:#f55a72;--green:#4ade80;--purple:#a855f7;
+  --text:#e4f0ec;--muted:#5a7a8a;--muted2:#3a5568;
+  --sidebar-w:220px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,220,180,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(0,220,180,0.02) 1px,transparent 1px);background-size:50px 50px;pointer-events:none;z-index:0;}
+::selection{background:var(--teal);color:#000;}
+::-webkit-scrollbar{width:3px;}::-webkit-scrollbar-thumb{background:var(--border2);}
+
+/* ── AUTH GATE ── */
+#authGate{
+  position:fixed;inset:0;z-index:2000;
+  background:var(--bg);
+  display:flex;align-items:center;justify-content:center;
+  padding:1rem;
+}
+.auth-card{
+  width:100%;max-width:420px;
+  background:var(--surface);border:1px solid var(--border2);
+  position:relative;overflow:hidden;
+  animation:slideUp .5s ease both;
+}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:none;}}
+.auth-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--teal),var(--teal2));}
+.auth-header{padding:2rem 2rem 1.5rem;text-align:center;}
+.auth-logo{display:flex;align-items:center;justify-content:center;gap:0.6rem;margin-bottom:1.5rem;}
+.auth-hex{width:36px;height:36px;background:linear-gradient(135deg,var(--teal),var(--teal2));clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);display:flex;align-items:center;justify-content:center;font-size:1rem;color:#000;font-weight:900;}
+.auth-brand{font-family:'Orbitron',monospace;font-weight:700;font-size:0.82rem;color:var(--teal);letter-spacing:0.15em;}
+.auth-title{font-family:'Orbitron',monospace;font-weight:700;font-size:1.2rem;margin-bottom:0.4rem;}
+.auth-sub{font-size:0.78rem;color:var(--muted);}
+.auth-tabs{display:flex;border-bottom:1px solid var(--border);}
+.auth-tab{flex:1;padding:0.8rem;text-align:center;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:0.8rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);cursor:pointer;transition:all .2s;border-bottom:2px solid transparent;}
+.auth-tab.active{color:var(--teal);border-bottom-color:var(--teal);}
+.auth-body{padding:1.8rem 2rem;}
+.auth-screen{display:none;}
+.auth-screen.show{display:block;}
+.af{margin-bottom:1.1rem;}
+.af label{display:block;font-family:'Rajdhani',sans-serif;font-weight:600;font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-bottom:0.4rem;}
+.ai-wrap{position:relative;}
+.ai-wrap .ai-icon{position:absolute;left:0.85rem;top:50%;transform:translateY(-50%);font-size:0.85rem;color:var(--muted);pointer-events:none;}
+.auth-input{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:0.78rem 0.9rem 0.78rem 2.6rem;font-family:'DM Sans',sans-serif;font-size:0.84rem;outline:none;transition:border-color .2s;-webkit-appearance:none;}
+.auth-input::placeholder{color:var(--muted2);font-size:0.78rem;}
+.auth-input:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(0,220,180,0.06);}
+.auth-input.err{border-color:var(--red);}
+.auth-err{font-size:0.68rem;color:var(--red);margin-top:0.3rem;display:none;}
+.auth-err.show{display:block;}
+.auth-submit{width:100%;padding:0.9rem;background:linear-gradient(90deg,var(--teal),var(--teal2));border:none;color:#000;font-family:'Orbitron',monospace;font-weight:700;font-size:0.78rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:opacity .2s,transform .2s;margin-top:0.5rem;}
+.auth-submit:hover{opacity:0.88;transform:translateY(-1px);}
+.auth-switch{text-align:center;margin-top:1rem;font-size:0.76rem;color:var(--muted);}
+.auth-switch a{color:var(--teal);cursor:pointer;text-decoration:none;}
+.auth-switch a:hover{text-decoration:underline;}
+.auth-msg{padding:0.7rem 1rem;font-size:0.75rem;margin-bottom:1rem;display:none;}
+.auth-msg.show{display:block;}
+.auth-msg.success{background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.2);color:var(--green);}
+.auth-msg.error{background:rgba(245,90,114,0.1);border:1px solid rgba(245,90,114,0.2);color:var(--red);}
+
+/* ── SIDEBAR ── */
+.sidebar{
+  width:var(--sidebar-w);min-height:100vh;
+  background:rgba(8,15,23,0.99);border-right:1px solid var(--border);
+  position:fixed;left:0;top:0;bottom:0;z-index:100;
+  display:flex;flex-direction:column;
+}
+.sb-brand{padding:1.3rem 1.2rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:0.65rem;}
+.sb-hex{width:28px;height:28px;background:linear-gradient(135deg,var(--teal),var(--teal2));clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);display:flex;align-items:center;justify-content:center;font-size:0.65rem;color:#000;font-weight:900;animation:hex-glow 3s ease-in-out infinite;}
+@keyframes hex-glow{0%,100%{filter:drop-shadow(0 0 4px rgba(0,220,180,0.4));}50%{filter:drop-shadow(0 0 12px rgba(0,220,180,0.8));}}
+.sb-name{font-family:'Orbitron',monospace;font-size:0.62rem;font-weight:700;color:var(--teal);letter-spacing:0.12em;}
+.sb-nav{flex:1;padding:0.8rem 0;overflow-y:auto;}
+.sb-section{padding:0.5rem 1.2rem 0.2rem;font-size:0.58rem;color:var(--muted2);letter-spacing:0.15em;text-transform:uppercase;font-family:'Rajdhani',sans-serif;}
+.sb-item{
+  display:flex;align-items:center;gap:0.7rem;
+  padding:0.72rem 1.2rem;color:var(--muted);font-size:0.8rem;font-weight:500;
+  cursor:pointer;transition:all .2s;border-left:2px solid transparent;
+  text-decoration:none;
+}
+.sb-item:hover{color:var(--text);background:rgba(0,220,180,0.04);}
+.sb-item.active{color:var(--teal);border-left-color:var(--teal);background:rgba(0,220,180,0.07);}
+.sb-icon{font-size:0.95rem;width:18px;text-align:center;flex-shrink:0;}
+.sb-badge{margin-left:auto;background:var(--teal);color:#000;font-family:'Orbitron',monospace;font-size:0.52rem;font-weight:700;padding:0.12rem 0.4rem;min-width:16px;text-align:center;}
+.sb-footer{padding:1rem 1.2rem;border-top:1px solid var(--border);}
+.user-pill{display:flex;align-items:center;gap:0.65rem;}
+.user-av{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--teal2));display:flex;align-items:center;justify-content:center;font-size:0.68rem;font-weight:700;color:#000;flex-shrink:0;}
+.user-name{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:0.78rem;}
+.user-role{font-size:0.62rem;color:var(--muted);}
+.logout-btn{background:none;border:1px solid rgba(245,90,114,0.2);color:var(--red);font-family:'Rajdhani',sans-serif;font-weight:700;font-size:0.65rem;letter-spacing:0.08em;padding:0.2rem 0.5rem;cursor:pointer;margin-left:auto;transition:all .2s;flex-shrink:0;}
+.logout-btn:hover{background:rgba(245,90,114,0.1);}
+
+/* ── MAIN ── */
+.main{margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column;position:relative;z-index:1;}
+.topbar{height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;border-bottom:1px solid var(--border);background:rgba(3,10,15,0.9);backdrop-filter:blur(12px);position:sticky;top:0;z-index:50;}
+.topbar-left{display:flex;align-items:center;gap:0.8rem;}
+.page-title{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:1rem;letter-spacing:0.04em;}
+.page-crumb{font-family:'Rajdhani',sans-serif;font-size:0.7rem;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;}
+.topbar-right{display:flex;align-items:center;gap:0.8rem;}
+.topbar-notif{position:relative;width:32px;height:32px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);font-size:0.9rem;transition:all .2s;}
+.topbar-notif:hover{border-color:var(--teal);color:var(--teal);}
+.notif-dot{position:absolute;top:5px;right:5px;width:6px;height:6px;background:var(--red);border-radius:50%;}
+.live-chip{display:flex;align-items:center;gap:0.35rem;font-family:'Orbitron',monospace;font-size:0.58rem;color:var(--green);border:1px solid rgba(74,222,128,0.2);padding:0.22rem 0.65rem;}
+.live-dot{width:5px;height:5px;background:var(--green);border-radius:50%;animation:blink 1.3s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.2;}}
+
+/* ── PAGES ── */
+.page{display:none;padding:2rem;}
+.page.active{display:block;animation:pageIn .3s ease both;}
+@keyframes pageIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+
+/* ── STAT CARDS ── */
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem;}
+.stat-card{background:var(--surface);border:1px solid var(--border);padding:1.5rem;position:relative;overflow:hidden;transition:all .25s;cursor:default;}
+.stat-card:hover{border-color:var(--border2);background:var(--surface2);}
+.stat-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--teal),var(--teal2));transform:scaleX(0);transition:transform .3s;}
+.stat-card:hover::after{transform:scaleX(1);}
+.sc-icon{font-size:1.6rem;margin-bottom:0.8rem;}
+.sc-val{font-family:'Orbitron',monospace;font-weight:700;font-size:1.5rem;color:var(--teal);line-height:1;margin-bottom:0.3rem;}
+.sc-label{font-family:'Rajdhani',sans-serif;font-size:0.68rem;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;}
+.sc-change{font-size:0.7rem;color:var(--green);margin-top:0.3rem;}
+.sc-change.down{color:var(--red);}
+
+/* ── SECTION HEADER ── */
+.section-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;}
+.section-hd h2{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:1.05rem;letter-spacing:0.04em;}
+.section-hd .count-badge{font-family:'Orbitron',monospace;font-size:0.6rem;color:var(--teal);border:1px solid rgba(0,220,180,0.25);padding:0.15rem 0.5rem;}
+
+/* ── TABLE ── */
+.ps-table-wrap{background:var(--surface);border:1px solid var(--border);overflow:hidden;margin-bottom:1.5rem;}
+.ps-table-toolbar{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.2rem;border-bottom:1px solid var(--border);gap:0.8rem;flex-wrap:wrap;}
+.tbl-search{background:var(--bg);border:1px solid var(--border);color:var(--text);padding:0.5rem 0.9rem 0.5rem 2.4rem;font-family:'DM Sans',sans-serif;font-size:0.78rem;outline:none;width:220px;transition:border-color .2s;position:relative;}
+.tbl-search:focus{border-color:var(--teal);}
+.search-wrap{position:relative;}
+.search-wrap::before{content:'🔍';position:absolute;left:0.75rem;top:50%;transform:translateY(-50%);font-size:0.75rem;pointer-events:none;}
+.tbl-filter{background:var(--bg);border:1px solid var(--border);color:var(--muted);padding:0.5rem 0.8rem;font-family:'Rajdhani',sans-serif;font-size:0.72rem;letter-spacing:0.06em;text-transform:uppercase;outline:none;cursor:pointer;-webkit-appearance:none;}
+.tbl-filter:focus{border-color:var(--teal);}
+table{width:100%;border-collapse:collapse;}
+thead th{padding:0.85rem 1.2rem;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);text-align:left;border-bottom:1px solid var(--border);background:var(--surface2);}
+tbody tr{border-bottom:1px solid var(--border);transition:background .15s;cursor:default;}
+tbody tr:last-child{border-bottom:none;}
+tbody tr:hover{background:var(--surface2);}
+tbody td{padding:0.9rem 1.2rem;font-size:0.82rem;}
+.td-id{font-family:'Orbitron',monospace;font-size:0.68rem;color:var(--muted);}
+.td-product{display:flex;align-items:center;gap:0.7rem;}
+.td-prod-icon{width:32px;height:32px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:0.9rem;flex-shrink:0;}
+.td-prod-name{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:0.85rem;}
+.td-prod-cat{font-size:0.65rem;color:var(--muted);}
+.td-price{font-family:'Orbitron',monospace;font-size:0.78rem;color:var(--teal);}
+.td-date{font-size:0.74rem;color:var(--muted);}
+.status-badge{font-family:'Orbitron',monospace;font-size:0.55rem;font-weight:700;letter-spacing:0.08em;padding:0.2rem 0.6rem;display:inline-block;}
+.status-pending{background:rgba(245,200,66,0.12);color:var(--yellow);border:1px solid rgba(245,200,66,0.2);}
+.status-processing{background:rgba(0,180,224,0.12);color:var(--teal2);border:1px solid rgba(0,180,224,0.2);}
+.status-shipped{background:rgba(168,85,247,0.12);color:var(--purple);border:1px solid rgba(168,85,247,0.2);}
+.status-delivered{background:rgba(74,222,128,0.12);color:var(--green);border:1px solid rgba(74,222,128,0.2);}
+.status-cancelled{background:rgba(245,90,114,0.12);color:var(--red);border:1px solid rgba(245,90,114,0.2);}
+.action-btn{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:0.65rem;letter-spacing:0.08em;text-transform:uppercase;border:1px solid var(--border2);color:var(--teal);padding:0.2rem 0.6rem;cursor:pointer;background:transparent;transition:all .2s;}
+.action-btn:hover{background:var(--teal);color:#000;}
+.empty-state{text-align:center;padding:4rem 2rem;color:var(--muted);}
+.empty-state .es-icon{font-size:2.5rem;margin-bottom:0.8rem;opacity:0.3;}
+.empty-state p{font-size:0.82rem;line-height:1.6;}
+
+/* ── DASHBOARD CHARTS ── */
+.dash-grid{display:grid;grid-template-columns:2fr 1fr;gap:1.5rem;margin-bottom:1.5rem;}
+.chart-card{background:var(--surface);border:1px solid var(--border);padding:1.4rem;}
+.chart-title{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:0.88rem;letter-spacing:0.04em;margin-bottom:1.2rem;display:flex;align-items:center;gap:0.6rem;}
+.chart-title span{font-size:0.65rem;font-weight:400;color:var(--muted);}
+canvas.mini-chart{width:100%;height:140px;}
+
+/* Electricity usage widget */
+.usage-widget{background:var(--surface);border:1px solid var(--border);padding:1.4rem;margin-bottom:1.5rem;}
+.usage-meter{position:relative;margin:1rem auto;width:180px;height:100px;}
+.meter-arc{width:180px;height:90px;overflow:hidden;position:relative;}
+.meter-arc svg{width:100%;height:auto;}
+.meter-val{position:absolute;bottom:0;left:50%;transform:translateX(-50%);text-align:center;}
+.mv-num{font-family:'Orbitron',monospace;font-weight:700;font-size:1.5rem;color:var(--teal);}
+.mv-unit{font-size:0.65rem;color:var(--muted);display:block;}
+.usage-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.8rem;margin-top:1.2rem;}
+.usage-item{text-align:center;padding:0.8rem;background:var(--surface2);border:1px solid var(--border);}
+.ui-val{font-family:'Orbitron',monospace;font-size:0.9rem;color:var(--teal);}
+.ui-label{font-size:0.65rem;color:var(--muted);margin-top:0.2rem;}
+
+/* ── QUICK ACTIONS ── */
+.quick-actions{display:grid;grid-template-columns:repeat(4,1fr);gap:0.8rem;margin-bottom:1.5rem;}
+.qa-btn{background:var(--surface);border:1px solid var(--border);padding:1.2rem;text-align:center;cursor:pointer;transition:all .2s;text-decoration:none;color:var(--text);}
+.qa-btn:hover{border-color:var(--teal);background:var(--surface2);}
+.qa-icon{font-size:1.4rem;margin-bottom:0.5rem;}
+.qa-label{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:0.72rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);}
+
+/* ── ACTIVITY FEED ── */
+.activity-feed{display:flex;flex-direction:column;gap:0;}
+.af-item{display:flex;gap:0.9rem;padding:0.85rem 0;border-bottom:1px solid var(--border);}
+.af-item:last-child{border-bottom:none;}
+.af-dot-wrap{display:flex;flex-direction:column;align-items:center;gap:0;}
+.af-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:3px;}
+.af-line{width:1px;flex:1;background:var(--border);min-height:24px;}
+.af-content{flex:1;}
+.af-text{font-size:0.78rem;line-height:1.5;margin-bottom:0.15rem;}
+.af-time{font-size:0.65rem;color:var(--muted);}
+
+/* ── METER CARD ── */
+.meter-card{background:var(--surface);border:1px solid var(--border);padding:1.4rem;display:flex;align-items:center;gap:1.5rem;}
+.meter-icon-big{font-size:2.5rem;}
+
+.meter-num{font-family:'Orbitron',monospace;font-weight:700;font-size:1.2rem;color:var(--teal);margin-bottom:0.2rem;}
+.meter-label{font-size:0.72rem;color:var(--muted);}
+.meter-status{display:inline-flex;align-items:center;gap:0.3rem;margin-top:0.5rem;font-size:0.68rem;color:var(--green);}
+.meter-status::before{content:'';width:5px;height:5px;background:var(--green);border-radius:50%;animation:blink 1.2s infinite;}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:2rem;right:2rem;z-index:9999;padding:0.8rem 1.5rem;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:0.88rem;letter-spacing:0.05em;transform:translateY(80px);opacity:0;transition:all .35s cubic-bezier(.34,1.56,.64,1);pointer-events:none;}
+.toast.show{transform:none;opacity:1;}
+.toast.success{background:var(--teal);color:#000;}
+.toast.error{background:var(--red);color:#fff;}
+.toast.info{background:var(--surface2);color:var(--text);border:1px solid var(--border);}
+
+/* ── RESPONSIVE ── */
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%);}
+  .main{margin-left:0;}
+  .stat-row{grid-template-columns:1fr 1fr;}
+  .dash-grid{grid-template-columns:1fr;}
+  .quick-actions{grid-template-columns:1fr 1fr;}
+}
+/* Electricity Modal Styling */
+.elec-overlay.show {
+    display: flex !important;
+}
+.elec-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 8, 8, 0.9);
+    display: none; align-items: center; justify-content: center;
+    z-index: 2000; backdrop-filter: blur(8px);
+}
+
+.elec-modal {
+  position: relative;
+    background: #0a1111;
+    border: 1px solid #1a2c2c;
+    width: 90%; max-width: 400px;
+    padding: 2rem; border-radius: 12px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+    font-family: 'Rajdhani', sans-serif;
+}
+/* 2. The Close Button */
+.pay-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    color: #889999;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: 0.2s ease;
+    padding: 5px;
+    line-height: 1;
+}
+
+.pay-close:hover {
+    color: #00ffd5; 
+    transform: scale(1.1);
+}
+
+.pay-header { text-align: center; margin-bottom: 1.5rem; }
+.pay-header-icon { font-size: 2.5rem; color: #00ffd5; margin-bottom: 0.5rem; }
+.pay-header-title { font-family: 'Orbitron', sans-serif; color: #fff; font-size: 1.2rem; }
+
+.pay-form-group { margin-bottom: 1.5rem; }
+.pay-form-group label { display: block; color: #889999; font-size: 0.8rem; margin-bottom: 0.5rem; text-transform: uppercase; }
+.pay-form-group input {
+    width: 100%; background: #050a0a; border: 1px solid #1a2c2c;
+    padding: 12px; color: #00ffd5; font-family: 'Orbitron', monospace;
+    font-size: 1.1rem; border-radius: 4px; outline: none;
+}
+
+.pay-body button {
+    width: 100%; padding: 14px; background: #00ffd5; color: #000;
+    border: none; border-radius: 4px; font-family: 'Orbitron', sans-serif;
+    font-weight: 700; cursor: pointer; transition: 0.3s;
+}
+.pay-body button:hover { background: #00ccaa; box-shadow: 0 0 15px rgba(0,255,213,0.4); }
+
+/* Wireless Sync Animation */
+.wifi-loader {
+    width: 60px; height: 60px; border: 2px solid #00ffd5;
+    border-radius: 50%; margin: 0 auto 1rem;
+    animation: pulse 1.5s infinite;
+}
+  /*=======AI STYLING===============*/
+  /* ── FLOATING TRIGGER BUTTON ── */
+  .ai-trigger {
+  position: fixed;
+  bottom: 2rem; right: 2rem;
+  z-index: 999;
+  width: 64px; height: 64px;
+  background: linear-gradient(135deg, var(--teal), var(--teal2));
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem;
+  transition: all 0.3s;
+  animation: trigger-pulse 3s ease-in-out infinite;
+  box-shadow: 0 0 30px rgba(0,220,180,0.4), 0 0 60px rgba(0,220,180,0.15);
+}
+.ai-trigger:hover { transform: scale(1.1); box-shadow: 0 0 40px rgba(0,220,180,0.6), 0 0 80px rgba(0,220,180,0.25); }
+.ai-trigger.open { clip-path: none; border-radius: 50%; background: linear-gradient(135deg, var(--red), #c0394f); box-shadow: 0 0 30px rgba(245,90,114,0.5); animation: none; }
+@keyframes trigger-pulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(0,220,180,0.35), 0 0 40px rgba(0,220,180,0.1); }
+  50% { box-shadow: 0 0 35px rgba(0,220,180,0.65), 0 0 70px rgba(0,220,180,0.25); }
+}
+
+/* NOTIFICATION BADGE */
+.ai-trigger .notif-badge {
+  position: absolute; top: -4px; right: -4px;
+  background: var(--red); color: #fff;
+  font-family: 'Orbitron', monospace; font-size: 0.5rem; font-weight: 700;
+  width: 18px; height: 18px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  border: 2px solid var(--bg); animation: badge-pop 0.4s ease;
+}
+@keyframes badge-pop { from { transform: scale(0); } to { transform: scale(1); } }
+
+/* ── AI PANEL ── */
+.ai-panel {
+  position: fixed;
+  bottom: 7rem; right: 2rem;
+  width: var(--chat-w);
+  height: 680px;
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  z-index: 998;
+  display: flex; flex-direction: column;
+  transform: translateY(20px) scale(0.96);
+  opacity: 0; pointer-events: none;
+  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 40px 100px rgba(0,0,0,0.7), 0 0 60px rgba(0,220,180,0.08);
+  overflow: hidden;
+}
+.ai-panel.open { transform: none; opacity: 1; pointer-events: auto; }
+.ai-panel::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--teal), var(--teal2), var(--yellow), var(--teal));
+  background-size: 300%;
+  animation: line-shift 4s linear infinite;
+  z-index: 10;
+}
+@keyframes line-shift { 0% { background-position: 0%; } 100% { background-position: 300%; } }
+
+/* ── PANEL HEADER ── */
+.panel-hdr {
+  padding: 1rem 1.2rem 0.9rem;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 0.9rem;
+  background: var(--surface2);
+  flex-shrink: 0;
+}
+.volt-avatar {
+  width: 42px; height: 42px; flex-shrink: 0;
+  background: linear-gradient(135deg, var(--teal), var(--teal2));
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem;
+  animation: volt-glow 2.5s ease-in-out infinite;
+}
+@keyframes volt-glow {
+  0%, 100% { filter: drop-shadow(0 0 6px rgba(0,220,180,0.5)); }
+  50% { filter: drop-shadow(0 0 18px rgba(0,220,180,0.9)); }
+}
+.volt-info {}
+.volt-name {
+  font-family: 'Orbitron', monospace; font-weight: 700; font-size: 0.88rem;
+  color: var(--teal); letter-spacing: 0.05em;
+}
+.volt-status {
+  display: flex; align-items: center; gap: 0.35rem;
+  font-family: 'DM Mono', monospace; font-size: 0.62rem; color: var(--text2);
+  margin-top: 0.15rem;
+}
+.status-dot {
+  width: 5px; height: 5px; border-radius: 50%; background: var(--green);
+  animation: blink 1.4s infinite;
+}
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
+.panel-actions { margin-left: auto; display: flex; gap: 0.5rem; }
+.pa-btn {
+  width: 28px; height: 28px; border: 1px solid var(--border);
+  background: transparent; color: var(--muted); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.8rem; transition: all 0.2s;
+}
+.pa-btn:hover { border-color: var(--teal); color: var(--teal); }
+
+/* ── QUICK TABS ── */
+.quick-tabs {
+  display: flex; gap: 0; border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.qtab {
+  flex: 1; padding: 0.6rem; text-align: center;
+  font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 0.65rem;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--muted); cursor: pointer; transition: all 0.2s;
+  border-bottom: 2px solid transparent;
+}
+.qtab:hover { color: var(--text2); }
+.qtab.active { color: var(--teal); border-bottom-color: var(--teal); background: rgba(0,220,180,0.04); }
+
+/* ── TAB PANELS ── */
+.tab-panel { display: none; flex: 1; overflow: hidden; flex-direction: column; }
+.tab-panel.active { display: flex; }
+
+/* ── CHAT MESSAGES ── */
+.messages {
+  flex: 1; overflow-y: auto; padding: 1rem;
+  display: flex; flex-direction: column; gap: 0.8rem;
+  scroll-behavior: smooth;
+}
+.messages::-webkit-scrollbar { width: 3px; }
+.messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+/* MESSAGE BUBBLES */
+.msg { display: flex; gap: 0.6rem; animation: msgIn 0.3s ease both; max-width: 100%; }
+@keyframes msgIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.msg.user { flex-direction: row-reverse; }
+.msg-av {
+  width: 28px; height: 28px; flex-shrink: 0;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.65rem; font-weight: 700; margin-top: 2px;
+}
+.msg.ai .msg-av { background: linear-gradient(135deg, var(--teal), var(--teal2)); color: #000; }
+.msg.user .msg-av { background: linear-gradient(135deg, var(--purple), #7c3aed); color: #fff; }
+.msg-content { flex: 1; min-width: 0; }
+.msg-bubble {
+  padding: 0.75rem 0.9rem;
+  font-family: 'DM Mono', monospace; font-size: 0.78rem; line-height: 1.65;
+  max-width: 85%;
+}
+.msg.ai .msg-bubble {
+  background: var(--surface3); border: 1px solid var(--border);
+  color: var(--text); border-left: 2px solid var(--teal);
+}
+.msg.user .msg-bubble {
+  background: rgba(0,220,180,0.08); border: 1px solid rgba(0,220,180,0.2);
+  color: var(--teal); margin-left: auto;
+}
+.msg-meta {
+  font-family: 'DM Mono', monospace; font-size: 0.58rem; color: var(--muted);
+  margin-top: 0.25rem;
+}
+.msg.user .msg-meta { text-align: right; }
+
+/* TYPING INDICATOR */
+.typing-indicator {
+  display: flex; gap: 4px; align-items: center; padding: 0.75rem 0.9rem;
+  background: var(--surface3); border: 1px solid var(--border);
+  border-left: 2px solid var(--teal); width: fit-content;
+}
+.typing-dot {
+  width: 5px; height: 5px; border-radius: 50%; background: var(--teal);
+  animation: bounce 1.2s ease-in-out infinite;
+}
+.typing-dot:nth-child(2) { animation-delay: 0.2s; }
+.typing-dot:nth-child(3) { animation-delay: 0.4s; }
+@keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+
+/* QUICK PROMPTS */
+.quick-prompts {
+  padding: 0.7rem;
+  border-top: 1px solid var(--border);
+  display: flex; flex-wrap: wrap; gap: 0.4rem;
+  flex-shrink: 0;
+}
+.qp-btn {
+  font-family: 'Rajdhani', sans-serif; font-weight: 600; font-size: 0.65rem;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  border: 1px solid var(--border); color: var(--muted);
+  padding: 0.28rem 0.65rem; cursor: pointer; background: transparent;
+  transition: all 0.2s;
+}
+.qp-btn:hover { border-color: var(--teal); color: var(--teal); background: rgba(0,220,180,0.05); }
+
+/* ── INPUT AREA ── */
+.input-area {
+  padding: 0.8rem;
+  border-top: 1px solid var(--border);
+  background: var(--surface2);
+  flex-shrink: 0;
+}
+.input-row { display: flex; gap: 0.5rem; align-items: flex-end; }
+.chat-input {
+  flex: 1; background: var(--bg); border: 1px solid var(--border);
+  color: var(--text); padding: 0.7rem 0.9rem;
+  font-family: 'DM Mono', monospace; font-size: 0.78rem; outline: none;
+  resize: none; max-height: 80px; min-height: 38px;
+  transition: border-color 0.2s;
+  line-height: 1.5;
+}
+.chat-input::placeholder { color: var(--muted); font-size: 0.72rem; }
+.chat-input:focus { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(0,220,180,0.06); }
+.send-btn {
+  width: 38px; height: 38px; flex-shrink: 0;
+  background: linear-gradient(135deg, var(--teal), var(--teal2));
+  border: none; color: #000; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.9rem; transition: all 0.2s;
+}
+.send-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+.send-btn:disabled { opacity: 0.4; pointer-events: none; }
+
+/* MIC BUTTON */
+.mic-btn {
+  width: 38px; height: 38px; flex-shrink: 0;
+  background: var(--bg); border: 1px solid var(--border);
+  color: var(--muted); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.9rem; transition: all 0.2s;
+}
+.mic-btn:hover { border-color: var(--teal); color: var(--teal); }
+.mic-btn.listening {
+  background: rgba(245,90,114,0.1); border-color: var(--red); color: var(--red);
+  animation: mic-pulse 1s ease-in-out infinite;
+}
+@keyframes mic-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(245,90,114,0.4); }
+  50% { box-shadow: 0 0 0 8px rgba(245,90,114,0); }
+}
+
+/* VOICE WAVE INDICATOR */
+.voice-wave {
+  display: none; align-items: center; gap: 3px;
+  padding: 0.3rem 0.6rem; margin-bottom: 0.4rem;
+}
+.voice-wave.show { display: flex; }
+.vw-bar {
+  width: 3px; border-radius: 2px; background: var(--red);
+  animation: wave-bar 0.8s ease-in-out infinite;
+}
+.vw-bar:nth-child(1) { height: 8px; animation-delay: 0s; }
+.vw-bar:nth-child(2) { height: 14px; animation-delay: 0.1s; }
+.vw-bar:nth-child(3) { height: 20px; animation-delay: 0.2s; }
+.vw-bar:nth-child(4) { height: 14px; animation-delay: 0.3s; }
+.vw-bar:nth-child(5) { height: 8px; animation-delay: 0.4s; }
+@keyframes wave-bar {
+  0%, 100% { transform: scaleY(0.5); opacity: 0.5; }
+  50% { transform: scaleY(1); opacity: 1; }
+}
+.vw-label { font-family: 'DM Mono', monospace; font-size: 0.65rem; color: var(--red); margin-left: 0.4rem; }
+
+/* ── DASHBOARD TAB ── */
+.dash-tab { flex: 1; overflow-y: auto; padding: 1rem; }
+.dash-tab::-webkit-scrollbar { width: 3px; }
+.dash-tab::-webkit-scrollbar-thumb { background: var(--border); }
+
+.dash-section { margin-bottom: 1.2rem; }
+.ds-title {
+  font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 0.7rem;
+  letter-spacing: 0.15em; text-transform: uppercase; color: var(--teal);
+  margin-bottom: 0.6rem; display: flex; align-items: center; gap: 0.5rem;
+}
+.ds-title::before { content: ''; width: 12px; height: 1px; background: var(--teal); }
+
+/* POWER GAUGE */
+.power-gauge-wrap { text-align: center; padding: 0.5rem 0 1rem; }
+.gauge-svg { width: 160px; height: 90px; margin: 0 auto; display: block; }
+.gauge-val {
+  font-family: 'Orbitron', monospace; font-weight: 900; font-size: 1.4rem;
+  color: var(--teal); line-height: 1; text-align: center;
+}
+.gauge-label { font-family: 'DM Mono', monospace; font-size: 0.62rem; color: var(--muted); text-align: center; margin-top: 0.2rem; }
+
+/* STAT MINI CARDS */
+.stat-mini-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+.stat-mini {
+  background: var(--surface2); border: 1px solid var(--border);
+  padding: 0.75rem; position: relative; overflow: hidden;
+  transition: all 0.2s;
+}
+.stat-mini:hover { border-color: var(--border2); background: var(--surface3); }
+.stat-mini::after {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, var(--teal), var(--teal2));
+  transform: scaleX(0); transition: transform 0.3s;
+}
+.stat-mini:hover::after { transform: scaleX(1); }
+.sm-val { font-family: 'Orbitron', monospace; font-weight: 700; font-size: 1rem; color: var(--teal); }
+.sm-label { font-family: 'DM Mono', monospace; font-size: 0.6rem; color: var(--muted); margin-top: 0.2rem; }
+.sm-change { font-size: 0.6rem; margin-top: 0.15rem; }
+.sm-change.up { color: var(--green); }
+.sm-change.down { color: var(--red); }
+
+/* USAGE BAR */
+.usage-bar-item { margin-bottom: 0.6rem; }
+.ub-header { display: flex; justify-content: space-between; font-family: 'DM Mono', monospace; font-size: 0.65rem; margin-bottom: 0.3rem; }
+.ub-label { color: var(--text2); }
+.ub-val { color: var(--teal); }
+.ub-track { height: 3px; background: var(--surface3); border-radius: 2px; overflow: hidden; }
+.ub-fill { height: 100%; border-radius: 2px; background: linear-gradient(90deg, var(--teal), var(--teal2)); transition: width 1s ease; }
+.ub-fill.yellow { background: linear-gradient(90deg, var(--yellow), var(--orange)); }
+.ub-fill.red { background: linear-gradient(90deg, var(--red), #c0394f); }
+
+/* NOTIFICATION ITEMS */
+.notif-item {
+  display: flex; gap: 0.7rem; padding: 0.75rem;
+  background: var(--surface2); border: 1px solid var(--border);
+  margin-bottom: 0.5rem; position: relative; overflow: hidden;
+  animation: notifIn 0.4s ease both; cursor: pointer; transition: all 0.2s;
+}
+.notif-item:hover { border-color: var(--border2); background: var(--surface3); }
+.notif-item.unread::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px;
+  background: var(--teal);
+}
+.notif-item.product::before { background: var(--yellow); }
+.notif-item.alert::before { background: var(--red); }
+@keyframes notifIn { from { opacity: 0; transform: translateX(10px); } to { opacity: 1; transform: none; } }
+.ni-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 1px; }
+.ni-title { font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 0.8rem; margin-bottom: 0.15rem; }
+.ni-body { font-family: 'DM Mono', monospace; font-size: 0.65rem; color: var(--text2); line-height: 1.5; }
+.ni-time { font-family: 'DM Mono', monospace; font-size: 0.58rem; color: var(--muted); margin-top: 0.2rem; }
+
+/* TRANSACTIONS */
+.txn-item {
+  display: flex; align-items: center; gap: 0.7rem;
+  padding: 0.7rem; border-bottom: 1px solid var(--border);
+}
+.txn-item:last-child { border-bottom: none; }
+.txn-icon { width: 28px; height: 28px; background: var(--surface3); display: flex; align-items: center; justify-content: center; font-size: 0.8rem; flex-shrink: 0; }
+.txn-name { font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 0.8rem; margin-bottom: 0.1rem; }
+.txn-sub { font-family: 'DM Mono', monospace; font-size: 0.6rem; color: var(--muted); }
+.txn-amount { margin-left: auto; font-family: 'Orbitron', monospace; font-size: 0.72rem; }
+.txn-amount.debit { color: var(--red); }
+.txn-amount.credit { color: var(--green); }
+
+/* RECOMMENDATIONS */
+.rec-card {
+  background: var(--surface2); border: 1px solid var(--border);
+  padding: 0.85rem; margin-bottom: 0.5rem;
+  border-left: 2px solid var(--teal); transition: all 0.2s;
+}
+.rec-card:hover { background: var(--surface3); }
+.rec-card.warn { border-left-color: var(--yellow); }
+.rec-card.alert { border-left-color: var(--red); }
+.rc-title { font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 0.8rem; margin-bottom: 0.3rem; display: flex; align-items: center; gap: 0.4rem; }
+.rc-body { font-family: 'DM Mono', monospace; font-size: 0.65rem; color: var(--text2); line-height: 1.6; }
+.rc-save { font-size: 0.62rem; color: var(--green); margin-top: 0.3rem; font-family: 'DM Mono', monospace; }
+
+/* VOICE READOUT ANIMATION */
+.speaking-wave {
+  display: none; align-items: center; gap: 2px; margin-left: 0.5rem;
+}
+.speaking-wave.show { display: flex; }
+.sw-bar {
+  width: 2px; border-radius: 2px; background: var(--teal);
+  animation: sw-anim 0.6s ease-in-out infinite alternate;
+}
+.sw-bar:nth-child(1) { height: 5px; animation-delay: 0s; }
+.sw-bar:nth-child(2) { height: 9px; animation-delay: 0.1s; }
+.sw-bar:nth-child(3) { height: 12px; animation-delay: 0.2s; }
+.sw-bar:nth-child(4) { height: 9px; animation-delay: 0.3s; }
+.sw-bar:nth-child(5) { height: 5px; animation-delay: 0.4s; }
+@keyframes sw-anim { from { transform: scaleY(0.5); } to { transform: scaleY(1); } }
+
+/* SCROLLBAR UNIVERSAL */
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+/* RESPONSIVE */
+@media (max-width: 480px) {
+  :root { --chat-w: calc(100vw - 2rem); }
+  .ai-panel { right: 1rem; bottom: 5.5rem; }
+  .ai-trigger { right: 1rem; bottom: 1rem; }
+}
+@keyframes pulse { 0% { transform: scale(0.8); opacity: 1; } 100% { transform: scale(1.5); opacity: 0; } }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════
+     SIDEBAR
+══════════════════════════════════════ -->
+<aside class="sidebar" id="sidebar">
+  <div class="sb-brand">
+    <div class="sb-hex">⚡</div>
+    <span class="sb-name">VOLTCONNECT</span>
+  </div>
+  <nav class="sb-nav">
+    <div class="sb-section">Main</div>
+    <div class="sb-item active" data-page="dashboard"><span class="sb-icon">📊</span> Dashboard</div>
+    <div class="sb-item" data-page="orders"><span class="sb-icon">📦</span> My Orders <span class="sb-badge" id="ordersBadge">0</span></div>
+    <div class="sb-item" data-page="completed"><span class="sb-icon">✅</span> Completed <span class="sb-badge" id="completedBadge">0</span></div>
+    <div class="sb-section">Services</div>
+    <div class="sb-item" onclick="openMarket()"><span class="sb-icon">🛒</span> Marketplace</div>
+    <div class="sb-item" onclick="openElectricityCard()"><span class="sb-icon">⚡</span> Pay Electricity</div>
+    <div class="sb-item" onclick="showToast('Usage monitor loading...','info')"><span class="sb-icon">📈</span> Usage Monitor</div>
+    <div class="sb-section">Account</div>
+    <div class="sb-item" data-page="profile"><span class="sb-icon">👤</span> Profile</div>
+    <div class="sb-item" onclick="showToast('Support team contacted','success')"><span class="sb-icon">🎧</span> Support</div>
+  </nav>
+  <div class="sb-footer">
+    <div class="user-pill">
+      <div class="user-av" id="userAv">?</div>
+      <div>
+        <div class="user-name" id="userNameSb">Guest</div>
+        <div class="user-role">Customer</div>
+      </div>
+      <button class="logout-btn" onclick="handleLogout()">Out</button>
+    </div>
+  </div>
+</aside>
+
+<!-- ══════════════════════════════════════
+     MAIN CONTENT
+══════════════════════════════════════ -->
+<div class="main" id="mainContent" style="display:none;">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="page-crumb" id="pagecrumb">Dashboard</div>
+      <div class="page-title" id="pageTitle">Overview</div>
+    </div>
+    <div class="topbar-right">
+      <div class="live-chip"><div class="live-dot"></div> Live</div>
+      <div class="topbar-notif" onclick="showToast('No new notifications','info')">🔔<div class="notif-dot"></div></div>
+      <div style="font-size:0.72rem;color:var(--muted);font-family:'Rajdhani',sans-serif;">Welcome, <span id="userNameTop" style="color:var(--teal);font-weight:700;">User</span></div>
+    </div>
+  </div>
+
+  <!-- ── PAGE: DASHBOARD ── -->
+  <div class="page active" id="page-dashboard">
+    <div style="padding:0 0 0.5rem;">
+      <div style="font-family:'Orbitron',monospace;font-size:0.65rem;color:var(--muted);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:0.3rem;">Good morning ⚡</div>
+      <h1 style="font-family:'Orbitron',monospace;font-weight:700;font-size:1.3rem;margin-bottom:1.5rem;">Your Power Dashboard</h1>
+    </div>
+
+    <!-- Stats -->
+    <div class="stat-row">
+      <div class="stat-card">
+        <div class="sc-icon">📦</div>
+        <div class="sc-val" id="dashTotalOrders">0</div>
+        <div class="sc-label">Total Orders</div>
+        <div class="sc-change">↑ All time</div>
+      </div>
+      <div class="stat-card">
+        <div class="sc-icon">✅</div>
+        <div class="sc-val" id="dashCompleted">0</div>
+        <div class="sc-label">Completed</div>
+        <div class="sc-change">↑ Delivered</div>
+      </div>
+      <div class="stat-card">
+        <div class="sc-icon">⏳</div>
+        <div class="sc-val" id="dashPending">0</div>
+        <div class="sc-label">Pending</div>
+        <div class="sc-change" id="pendingChange">In progress</div>
+      </div>
+      <div class="stat-card">
+        <div class="sc-icon">💰</div>
+        <div class="sc-val" id="dashSpent">0</div>
+        <div class="sc-label">Total Spent (Ksh)</div>
+        <div class="sc-change">↑ Lifetime</div>
+      </div>
+    </div>
+
+    <!-- Meter + Usage -->
+    <div style="display:grid;grid-template-columns:1fr 1.5fr;gap:1.5rem;margin-bottom:1.5rem;">
+      <div>
+        <div class="meter-card" style="margin-bottom:1rem;">
+          <div class="meter-icon-big">⚡</div>
+          <div class="meter-info">
+            <div style="font-family:'Rajdhani',sans-serif;font-size:0.68rem;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.3rem;">Your Meter</div>
+            <div class="meter-num" id="dashMeter">MTR-N/A</div>
+            <div class="meter-label" id="dashPhone">Phone: —</div>
+            <div class="meter-status">Active & Connected</div>
+          </div>
+        </div>
+        <div class="usage-widget">
+          <div style="font-family:'Rajdhani',sans-serif;font-weight:700;font-size:0.82rem;letter-spacing:0.04em;margin-bottom:0.8rem;">⚡ This Month's Usage</div>
+          <div class="usage-row">
+            <div class="usage-item"><div class="ui-val" id="usageKwh">—</div><div class="ui-label">kWh Used</div></div>
+            <div class="usage-item"><div class="ui-val" id="usageBill">—</div><div class="ui-label">Est. Bill</div></div>
+            <div class="usage-item"><div class="ui-val">98%</div><div class="ui-label">Grid Status</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Monthly Spending <span>Last 6 months</span></div>
+        <canvas id="spendChart" height="160"></canvas>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div style="font-family:'Rajdhani',sans-serif;font-weight:700;font-size:0.85rem;letter-spacing:0.04em;margin-bottom:0.8rem;">Quick Actions</div>
+    <div class="quick-actions" style="margin-bottom:1.5rem;">
+      <div class="qa-btn" onclick="switchPage('orders')">
+        <div class="qa-icon">📦</div>
+        <div class="qa-label">My Orders</div>
+      </div>
+      <div class="qa-btn" onclick="window.open('marketplace.html')">
+        <div class="qa-icon">🛒</div>
+        <div class="qa-label">Shop Now</div>
+      </div>
+      <div class="qa-btn" onclick="openElectricityCard()">
+        <div class="qa-icon">⚡</div>
+        <div class="qa-label">Pay Bill</div>
+      </div>
+      <div class="qa-btn" onclick="switchPage('completed')">
+        <div class="qa-icon">✅</div>
+        <div class="qa-label">Completed</div>
+      </div>
+    </div>
+
+    <!-- Activity Feed -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
+      <div class="chart-card">
+        <div class="chart-title">Recent Activity</div>
+        <div class="activity-feed" id="activityFeed">
+          <div class="af-item">
+            <div class="af-dot-wrap"><div class="af-dot" style="background:var(--teal)"></div><div class="af-line"></div></div>
+            <div class="af-content"><div class="af-text">Account created successfully</div><div class="af-time">Just now</div></div>
+          </div>
+          <div class="af-item">
+            <div class="af-dot-wrap"><div class="af-dot" style="background:var(--yellow)"></div><div class="af-line"></div></div>
+            <div class="af-content"><div class="af-text">Logged into customer portal</div><div class="af-time">Now</div></div>
+          </div>
+          <div class="af-item">
+            <div class="af-dot-wrap"><div class="af-dot" style="background:var(--muted2)"></div></div>
+            <div class="af-content"><div class="af-text">Profile set up complete</div><div class="af-time">Today</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Grid Status <span>Live</span></div>
+        <div style="display:flex;flex-direction:column;gap:0.7rem;margin-top:0.3rem;">
+          <div style="display:flex;justify-content:space-between;font-size:0.78rem;padding:0.5rem 0;border-bottom:1px solid var(--border);">
+            <span style="color:var(--muted);">Grid Frequency</span><span style="font-family:'Orbitron',monospace;font-size:0.74rem;color:var(--green);">50.02 Hz ✓</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:0.78rem;padding:0.5rem 0;border-bottom:1px solid var(--border);">
+            <span style="color:var(--muted);">Voltage</span><span style="font-family:'Orbitron',monospace;font-size:0.74rem;color:var(--teal);">240V</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:0.78rem;padding:0.5rem 0;border-bottom:1px solid var(--border);">
+            <span style="color:var(--muted);">Outages Nearby</span><span style="font-family:'Orbitron',monospace;font-size:0.74rem;color:var(--green);">None</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:0.78rem;padding:0.5rem 0;border-bottom:1px solid var(--border);">
+            <span style="color:var(--muted);">Load Shedding</span><span style="font-family:'Orbitron',monospace;font-size:0.74rem;color:var(--green);">Not Active</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:0.78rem;padding:0.5rem 0;">
+            <span style="color:var(--muted);">Next Maintenance</span><span style="font-family:'Orbitron',monospace;font-size:0.74rem;color:var(--yellow);">May 15</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--PAY ELECTRICITY-->
+  <div class="elec-overlay" id="elecOverlay">
+    <div class="elec-modal">
+      <div class="pay-header">
+        <div class="pay-header-icon">📡</div>
+        <div>
+          <div class="pay-header-title">Smart Meter Sync</div>
+          <div class="pay-header-sub">Wireless Token Transmission</div>
+        </div>
+        <button class="pay-close" onclick="closeElecCard()">✕</button>
+      </div>
+  
+      <div class="pay-body" id="elecBody">
+        <div class="pay-form-group">
+          <label>Enter Amount (Ksh)</label>
+          <input type="number" id="elecAmount" class="pay-input" placeholder="e.g. 1000">
+        </div>
+        <button class="pay-submit-btn mpesa-btn" onclick="startWirelessSync()">⚡ Pay & Sync via Wi-Fi</button>
+      </div>
+  
+      <!-- Syncing Animation View -->
+      <div class="pay-body" id="syncView" style="display:none; text-align:center;">
+         <div class="wifi-loader">📶</div>
+         <p id="syncStatus">Searching for Meter...</p>
+         <div class="progress-container"><div class="progress-bar" id="syncProgress"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PAGE: MY ORDERS ── -->
+  <div class="page" id="page-orders">
+    <div style="margin-bottom:1.5rem;">
+      <h1 style="font-family:'Orbitron',monospace;font-weight:700;font-size:1.3rem;margin-bottom:0.3rem;">My Orders</h1>
+      <p style="font-size:0.8rem;color:var(--muted);">Track all your purchases from the PowerSupply marketplace.</p>
+    </div>
+    <div class="ps-table-wrap">
+      <div class="ps-table-toolbar">
+        <div class="section-hd" style="margin:0;"><h2>All Orders</h2><div class="count-badge" id="ordersCount">0</div></div>
+        <div style="display:flex;gap:0.6rem;align-items:center;flex-wrap:wrap;">
+          <div class="search-wrap"><input type="text" class="tbl-search" id="ordersSearch" placeholder="Search orders..." oninput="renderOrders()"/></div>
+          <select class="tbl-filter" id="ordersFilter" onchange="renderOrders()">
+            <option value="all">All Status</option>
+            <option value="pending">Pending</option>
+            <option value="processing">Processing</option>
+            <option value="shipped">Shipped</option>
+            <option value="delivered">Delivered</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+        </div>
+      </div>
+      <div id="ordersTableContainer"></div>
+    </div>
+  </div>
+
+  <!-- ── PAGE: COMPLETED ORDERS ── -->
+  <div class="page" id="page-completed">
+    <div style="margin-bottom:1.5rem;">
+      <h1 style="font-family:'Orbitron',monospace;font-weight:700;font-size:1.3rem;margin-bottom:0.3rem;">Completed Orders</h1>
+      <p style="font-size:0.8rem;color:var(--muted);">All successfully delivered orders and purchases.</p>
+    </div>
+    <div class="stat-row" style="grid-template-columns:repeat(3,1fr);">
+      <div class="stat-card"><div class="sc-icon">✅</div><div class="sc-val" id="compCount">0</div><div class="sc-label">Total Delivered</div></div>
+      <div class="stat-card"><div class="sc-icon">💰</div><div class="sc-val" id="compSpent">0</div><div class="sc-label">Total Spent (Ksh)</div></div>
+      <div class="stat-card"><div class="sc-icon">⭐</div><div class="sc-val">5.0</div><div class="sc-label">Avg Rating Given</div></div>
+    </div>
+    <div class="ps-table-wrap">
+      <div class="ps-table-toolbar">
+        <div class="section-hd" style="margin:0;"><h2>Delivered Orders</h2><div class="count-badge" id="completedCount">0</div></div>
+        <div class="search-wrap"><input type="text" class="tbl-search" id="completedSearch" placeholder="Search completed..." oninput="renderCompleted()"/></div>
+      </div>
+      <div id="completedTableContainer"></div>
+    </div>
+  </div>
+
+  <!-- ── PAGE: PROFILE ── -->
+  <div class="page" id="page-profile">
+    <div style="margin-bottom:1.5rem;">
+      <h1 style="font-family:'Orbitron',monospace;font-weight:700;font-size:1.3rem;margin-bottom:0.3rem;">My Profile</h1>
+      <p style="font-size:0.8rem;color:var(--muted);">View and update your account information.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
+      <div class="chart-card">
+        <div class="chart-title">Account Information</div>
+        <div style="display:flex;flex-direction:column;gap:0.8rem;margin-top:0.5rem;" id="profileInfo"></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Change Password</div>
+        <div style="margin-top:0.5rem;">
+          <div class="af"><label>Current Password</label><div class="ai-wrap"><span class="ai-icon">🔒</span><input class="auth-input" type="password" id="cpOld" placeholder="Current password"/></div></div>
+          <div class="af"><label>New Password</label><div class="ai-wrap"><span class="ai-icon">🔐</span><input class="auth-input" type="password" id="cpNew" placeholder="New password"/></div></div>
+          <button class="auth-submit" onclick="changePassword()">Update Password</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<!-- ══════════════════════════════════════
+     VOLT AI PANEL
+══════════════════════════════════════ -->
+<button class="ai-trigger" id="aiTrigger" onclick="togglePanel()" title="Open VOLT AI">
+  <span id="triggerIcon">⚡</span>
+  <div class="notif-badge" id="notifBadge" style="display:none;">3</div>
+</button>
+
+<div class="ai-panel" id="aiPanel">
+
+  <!-- HEADER -->
+  <div class="panel-hdr">
+    <div class="volt-avatar">⚡</div>
+    <div class="volt-info">
+      <div class="volt-name">VOLT AI <span class="speaking-wave" id="speakWave"><span class="sw-bar"></span><span class="sw-bar"></span><span class="sw-bar"></span><span class="sw-bar"></span><span class="sw-bar"></span></span></div>
+      <div class="volt-status"><div class="status-dot"></div><span id="voltStatus">PowerSupply Intelligence · Online</span></div>
+    </div>
+    <div class="panel-actions">
+      <button class="pa-btn" onclick="clearChat()" title="Clear chat">🗑</button>
+      <button class="pa-btn" onclick="togglePanel()" title="Close">✕</button>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="quick-tabs">
+    <div class="qtab active" onclick="switchTab('chat', this)">💬 Chat</div>
+    <div class="qtab" onclick="switchTab('dashboard', this)">📊 Usage</div>
+    <div class="qtab" onclick="switchTab('notifs', this)">🔔 Alerts <span id="alertCount" style="color:var(--red);font-size:0.55rem;"></span></div>
+    <div class="qtab" onclick="switchTab('txns', this)">💳 Orders</div>
+  </div>
+
+  <!-- ── TAB: CHAT ── -->
+  <div class="tab-panel active" id="tab-chat">
+    <div class="messages" id="messages"></div>
+
+    <!-- QUICK PROMPTS -->
+    <div class="quick-prompts">
+      <button class="qp-btn" onclick="quickPrompt('How much power have I used today?')">⚡ Usage Today</button>
+      <button class="qp-btn" onclick="quickPrompt('Show new products in the market')">🛒 New Products</button>
+      <button class="qp-btn" onclick="quickPrompt('How can I reduce my electricity bill?')">💡 Save Energy</button>
+      <button class="qp-btn" onclick="quickPrompt('Show my recent orders')">📦 My Orders</button>
+      <button class="qp-btn" onclick="quickPrompt('What is my current balance and meter status?')">🔌 Meter Status</button>
+      <button class="qp-btn" onclick="quickPrompt('Give me a full power usage analysis and recommendations')">📈 Full Analysis</button>
+    </div>
+
+    <!-- INPUT -->
+    <div class="input-area">
+      <div class="voice-wave" id="voiceWave">
+        <div class="vw-bar"></div><div class="vw-bar"></div><div class="vw-bar"></div><div class="vw-bar"></div><div class="vw-bar"></div>
+        <span class="vw-label">Listening… speak now</span>
+      </div>
+      <div class="input-row">
+        <textarea class="chat-input" id="chatInput" placeholder="Ask VOLT anything about your power usage…" rows="1"
+          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMessage();}"
+          oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,80)+'px'"></textarea>
+        <button class="mic-btn" id="micBtn" onclick="toggleSpeech()" title="Voice input">🎤</button>
+        <button class="send-btn" id="sendBtn" onclick="sendMessage()" title="Send">➤</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TAB: DASHBOARD ── -->
+  <div class="tab-panel" id="tab-dashboard">
+    <div class="dash-tab">
+
+      <div class="dash-section">
+        <div class="ds-title">Live Power Gauge</div>
+        <div class="power-gauge-wrap">
+          <svg class="gauge-svg" viewBox="0 0 160 90">
+            <path d="M 10 85 A 70 70 0 0 1 150 85" fill="none" stroke="#0a1c2a" stroke-width="12" stroke-linecap="round"/>
+            <path d="M 10 85 A 70 70 0 0 1 150 85" fill="none" stroke="url(#gaugeGrad)" stroke-width="12" stroke-linecap="round"
+              stroke-dasharray="220" id="gaugeFill" stroke-dashoffset="66"/>
+            <defs>
+              <linearGradient id="gaugeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" style="stop-color:#00dcb4"/>
+                <stop offset="60%" style="stop-color:#f5c842"/>
+                <stop offset="100%" style="stop-color:#f55a72"/>
+              </linearGradient>
+            </defs>
+            <text x="80" y="70" text-anchor="middle" font-family="Orbitron,monospace" font-size="18" font-weight="700" fill="#00dcb4" id="gaugeText">70%</text>
+          </svg>
+          <div class="gauge-val" id="gaugeKwh">142 kWh</div>
+          <div class="gauge-label">Used this month</div>
+        </div>
+      </div>
+
+      <div class="dash-section">
+        <div class="ds-title">Usage Breakdown</div>
+        <div class="stat-mini-row">
+          <div class="stat-mini"><div class="sm-val" id="smToday">4.2</div><div class="sm-label">kWh Today</div><div class="sm-change up" id="smTodayC">↑ 12% vs avg</div></div>
+          <div class="stat-mini"><div class="sm-val" id="smBill">Ksh 2,840</div><div class="sm-label">Est. Bill</div><div class="sm-change" id="smBillC" style="color:var(--yellow);">Ksh 3,200 projected</div></div>
+          <div class="stat-mini"><div class="sm-val" id="smUnits">58</div><div class="sm-label">Units Left</div><div class="sm-change up">6–8 days remaining</div></div>
+          <div class="stat-mini"><div class="sm-val" id="smPeak">18:00</div><div class="sm-label">Peak Hour</div><div class="sm-change down">↑ High demand</div></div>
+        </div>
+      </div>
+
+      <div class="dash-section">
+        <div class="ds-title">Appliance Usage (Est.)</div>
+        <div id="usageBars"></div>
+      </div>
+
+      <div class="dash-section">
+        <div class="ds-title">AI Recommendations</div>
+        <div id="recCards"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── TAB: NOTIFICATIONS ── -->
+  <div class="tab-panel" id="tab-notifs">
+    <div class="dash-tab" id="notifList"></div>
+  </div>
+
+  <!-- ── TAB: TRANSACTIONS ── -->
+  <div class="tab-panel" id="tab-txns">
+    <div class="dash-tab">
+      <div class="dash-section">
+        <div class="ds-title">Recent Orders & Payments</div>
+        <div style="background:var(--surface2);border:1px solid var(--border);" id="txnList"></div>
+      </div>
+      <div class="dash-section" style="margin-top:0.5rem;">
+        <div class="ds-title">Electricity Payments</div>
+        <div style="background:var(--surface2);border:1px solid var(--border);" id="elecTxnList"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toastEl"></div>
+
+<script>
+// ═══════════════════════════════════════════
+//  STORAGE KEYS
+// ═══════════════════════════════════════════
+var USERS_KEY='ps_users', CURR_KEY='ps_current_user', ORDERS_KEY='ps_orders';
+
+// ═══════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════
+window.addEventListener('DOMContentLoaded', function(){
+  // Pre-seed demo orders if none
+  if(!localStorage.getItem(ORDERS_KEY)){
+    localStorage.setItem(ORDERS_KEY, JSON.stringify([
+      {id:'ORD-001',userId:'demo@ps.com',product:'Laptop',category:'Computers',emoji:'💻',price:20000,qty:1,status:'delivered',date:'2025-03-10',ref:'TXN-192837'},
+      {id:'ORD-002',userId:'demo@ps.com',product:'iPhone 17 Pro Max',category:'Phones',emoji:'📱',price:70000,qty:1,status:'shipped',date:'2025-04-01',ref:'TXN-283746'},
+      {id:'ORD-003',userId:'demo@ps.com',product:'Meter Unit',category:'Power',emoji:'⚡',price:7000,qty:2,status:'processing',date:'2025-04-18',ref:'TXN-374651'},
+      {id:'ORD-004',userId:'demo@ps.com',product:'Gen-6 Meter Unit',category:'Power',emoji:'🔌',price:10000,qty:1,status:'pending',date:'2025-04-25',ref:'TXN-465820'},
+    ]));
+  }
+  // Pre-seed demo user
+  var users=getUsers();
+  if(!users.find(function(u){return u.email==='demo@ps.com';})){
+    users.push({email:'demo@ps.com',firstName:'Demo',lastName:'User',phone:'+254700000000',meter:'MTR-2024-DEMO01',password:'demo123',createdAt:new Date().toISOString()});
+    saveUsers(users);
+  }
+  checkAuth();
+});
+
+function getUsers(){return JSON.parse(localStorage.getItem(USERS_KEY)||'[]');}
+function saveUsers(u){localStorage.setItem(USERS_KEY,JSON.stringify(u));}
+function getCurrentUser(){var s=localStorage.getItem(CURR_KEY);return s?JSON.parse(s):null;}
+function getAllOrders(){return JSON.parse(localStorage.getItem(ORDERS_KEY)||'[]');}
+function getUserOrders(email){return getAllOrders().filter(function(o){return o.userId===email;});}
+
+// ═══════════════════════════════════════════
+//  AUTH CHECK
+// ═══════════════════════════════════════════
+function checkAuth(){
+  const user = JSON.parse(localStorage.getItem(CURR_KEY));
+
+  if (!user) {
+    window.location.href = "login.html";
+    return;
+  }
+
+  document.getElementById('mainContent').style.display = 'flex';
+  loadUserDashboard(user);
+}
+
+function handleLogout(){
+  localStorage.removeItem(CURR_KEY);
+  window.location.href = "login.html";
+}
+
+//===========================================
+//PAY ELECTROCITY
+//===========================================
+function openElectricityCard() {
+     // Show the payment overlay
+  const overlay = document.getElementById('elecOverlay');
+  overlay.classList.add('show');
+  
+  // Custom content for Electricity
+  document.getElementById('orderItemName').innerText = "Electricity Top-up";
+  document.getElementById('orderAmountChoose').innerText = "Ksh ---";
+  
+}
+
+function startWirelessSync() {
+    const amount = document.getElementById('elecAmount').value;
+    if(!amount) return alert("Enter amount");
+
+    // Switch to Syncing View
+    document.getElementById('elecBody').style.display = 'none';
+    document.getElementById('syncView').style.display = 'block';
+
+    let progress = 0;
+    const steps = ["Connecting to Grid...", "Authenticating Meter...", "Uploading Units...", "Sync Complete!"];
+    
+    const interval = setInterval(() => {
+        progress += 2;
+        document.getElementById('syncProgress').style.width = progress + "%";
+        
+        if(progress % 25 === 0) {
+            document.getElementById('syncStatus').innerText = steps[Math.floor(progress/25) - 1];
+        }
+
+        if(progress >= 100) {
+            clearInterval(interval);
+            finishSync();
+        }
+    }, 100);
+}
+
+function finishSync() {
+    // Generate a backup token
+    const backupToken = Math.floor(Math.random() * 9e15 + 1e15).toString().match(/.{1,4}/g).join('-');
+    
+    document.getElementById('syncView').innerHTML = `
+        <div class="success-hex">✓</div>
+        <h3 style="color:var(--teal)">Meter Synced Successfully!</h3>
+        <p style="font-size:0.8rem; color:var(--muted)">Units have been added via wireless connection.</p>
+        <div style="background:rgba(0,0,0,0.2); padding:1rem; border-radius:8px; margin:1rem 0;">
+            <span style="font-size:0.7rem; color:var(--yellow)">BACKUP TOKEN</span>
+            <div style="font-family:monospace; font-size:1.2rem; letter-spacing:2px;">${backupToken}</div>
+        </div>
+        <button class="success-done-btn" onclick="location.reload()">Done</button>
+    `;
+}
+
+function closeElecCard(){
+  const card = document.getElementById('elecOverlay');
+  card.classList.remove('show');
+}
+
+// ═══════════════════════════════════════════
+//  LOAD DASHBOARD
+// ═══════════════════════════════════════════
+function loadUserDashboard(user){
+  // Update UI with user info
+  var initials=(user.firstName?user.firstName[0]:'U')+(user.lastName?user.lastName[0]:'');
+  document.getElementById('userAv').textContent=initials.toUpperCase();
+  document.getElementById('userNameSb').textContent=user.firstName+' '+user.lastName;
+  document.getElementById('userNameTop').textContent=user.firstName;
+  document.getElementById('dashMeter').textContent=user.meter||'MTR-N/A';
+  document.getElementById('dashPhone').textContent='Phone: '+(user.phone||'—');
+  // Usage simulation
+  var kwh=Math.floor(Math.random()*200+80);
+  var bill=Math.floor(kwh*18);
+  document.getElementById('usageKwh').textContent=kwh+' kWh';
+  document.getElementById('usageBill').textContent='Ksh '+bill.toLocaleString();
+  // Orders
+  var orders=getUserOrders(user.email);
+  var delivered=orders.filter(function(o){return o.status==='delivered';});
+  var pending=orders.filter(function(o){return o.status!=='delivered'&&o.status!=='cancelled';});
+  var spent=delivered.reduce(function(s,o){return s+o.price*o.qty;},0);
+  document.getElementById('dashTotalOrders').textContent=orders.length;
+  document.getElementById('dashCompleted').textContent=delivered.length;
+  document.getElementById('dashPending').textContent=pending.length;
+  document.getElementById('dashSpent').textContent=Math.floor(spent/1000)+'K';
+  document.getElementById('ordersBadge').textContent=orders.length;
+  document.getElementById('completedBadge').textContent=delivered.length;
+  // Profile
+  document.getElementById('profileInfo').innerHTML=[
+    {label:'Full Name',val:user.firstName+' '+user.lastName},
+    {label:'Email',val:user.email},
+    {label:'Phone',val:user.phone||'—'},
+    {label:'Meter Number',val:user.meter||'—'},
+    {label:'Member Since',val:new Date(user.createdAt).toLocaleDateString()},
+  ].map(function(r){return '<div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid var(--border);font-size:0.78rem;"><span style="color:var(--muted);">'+r.label+'</span><span style="font-family:\'Rajdhani\',sans-serif;font-weight:600;">'+r.val+'</span></div>';}).join('');
+  // Update activity feed with orders
+  updateActivityFeed(orders);
+  // Render orders
+  renderOrders();
+  renderCompleted();
+  // Draw chart
+  drawSpendChart(orders);
+}
+
+function updateActivityFeed(orders){
+  var feed=document.getElementById('activityFeed');
+  var items=[
+    {text:'Logged into customer portal',time:'Just now',color:'var(--teal)'},
+  ];
+  orders.slice(0,4).forEach(function(o){
+    items.push({text:'Order '+o.id+' — '+o.product+' ('+o.status+')',time:o.date,color:o.status==='delivered'?'var(--green)':o.status==='cancelled'?'var(--red)':'var(--yellow)'});
+  });
+  feed.innerHTML=items.map(function(it,i){return '<div class="af-item"><div class="af-dot-wrap"><div class="af-dot" style="background:'+it.color+'"></div>'+(i<items.length-1?'<div class="af-line"></div>':'')+'</div><div class="af-content"><div class="af-text">'+it.text+'</div><div class="af-time">'+it.time+'</div></div></div>';}).join('');
+}
+
+// ═══════════════════════════════════════════
+//  RENDER ORDERS TABLE
+// ═══════════════════════════════════════════
+function renderOrders(){
+  var user=getCurrentUser(); if(!user) return;
+  var q=(document.getElementById('ordersSearch').value||'').toLowerCase();
+  var f=document.getElementById('ordersFilter').value||'all';
+  var orders=getUserOrders(user.email).filter(function(o){
+    var matchF=f==='all'||o.status===f;
+    var matchQ=!q||o.product.toLowerCase().includes(q)||o.id.toLowerCase().includes(q);
+    return matchF&&matchQ;
+  });
+  document.getElementById('ordersCount').textContent=orders.length;
+  var container=document.getElementById('ordersTableContainer');
+  if(!orders.length){container.innerHTML='<div class="empty-state"><div class="es-icon">📦</div><p>No orders found.<br>Visit the marketplace to place your first order.</p></div>';return;}
+  container.innerHTML='<table><thead><tr><th>Order ID</th><th>Product</th><th>Price</th><th>Qty</th><th>Status</th><th>Date</th><th>Action</th></tr></thead><tbody>'+
+  orders.map(function(o){return '<tr><td class="td-id">'+o.id+'</td><td><div class="td-product"><div class="td-prod-icon">'+o.emoji+'</div><div><div class="td-prod-name">'+o.product+'</div><div class="td-prod-cat">'+o.category+'</div></div></div></td><td class="td-price">Ksh '+Number(o.price).toLocaleString()+'</td><td>'+o.qty+'</td><td><span class="status-badge status-'+o.status+'">'+o.status+'</span></td><td class="td-date">'+o.date+'</td><td><button class="action-btn" onclick="viewOrder(\''+o.id+'\')">View</button></td></tr>';}).join('')+'</tbody></table>';
+}
+
+function renderCompleted(){
+  var user=getCurrentUser(); if(!user) return;
+  var q=(document.getElementById('completedSearch').value||'').toLowerCase();
+  var orders=getUserOrders(user.email).filter(function(o){return o.status==='delivered'&&(!q||o.product.toLowerCase().includes(q)||o.id.toLowerCase().includes(q));});
+  var total=orders.reduce(function(s,o){return s+o.price*o.qty;},0);
+  document.getElementById('compCount').textContent=orders.length;
+  document.getElementById('compSpent').textContent=Math.floor(total/1000)+'K';
+  document.getElementById('completedBadge').textContent=orders.length;
+  document.getElementById('completedCount').textContent=orders.length;
+  var container=document.getElementById('completedTableContainer');
+  if(!orders.length){container.innerHTML='<div class="empty-state"><div class="es-icon">✅</div><p>No completed orders yet.<br>Orders marked as delivered will appear here.</p></div>';return;}
+  container.innerHTML='<table><thead><tr><th>Order ID</th><th>Product</th><th>Total Paid</th><th>Delivered On</th><th>Ref</th><th>Action</th></tr></thead><tbody>'+
+  orders.map(function(o){return '<tr><td class="td-id">'+o.id+'</td><td><div class="td-product"><div class="td-prod-icon">'+o.emoji+'</div><div><div class="td-prod-name">'+o.product+'</div><div class="td-prod-cat">'+o.category+'</div></div></div></td><td class="td-price">Ksh '+(o.price*o.qty).toLocaleString()+'</td><td class="td-date">'+o.date+'</td><td class="td-id">'+(o.ref||'—')+'</td><td><button class="action-btn" onclick="showToast(\'Downloading receipt for '+o.id+'...\',\'success\')">Receipt</button></td></tr>';}).join('')+'</tbody></table>';
+}
+
+function viewOrder(id){
+  var orders=getAllOrders();
+  var o=orders.find(function(x){return x.id===id;});
+  if(o) showToast('Order '+o.id+': '+o.product+' — '+o.status,'info');
+}
+
+// ═══════════════════════════════════════════
+//  MINI CHART (canvas)
+// ═══════════════════════════════════════════
+function drawSpendChart(orders){
+  var canvas=document.getElementById('spendChart');
+  if(!canvas||!canvas.getContext) return;
+  var ctx=canvas.getContext('2d');
+  canvas.width=canvas.parentElement.offsetWidth-48;
+  canvas.height=160;
+  var W=canvas.width,H=canvas.height;
+  var months=['Nov','Dec','Jan','Feb','Mar','Apr'];
+  var data=months.map(function(_,i){return i===months.length-1?orders.reduce(function(s,o){return s+o.price*o.qty;},0)/1000:Math.floor(Math.random()*80+20);});
+  var max=Math.max.apply(null,data)||1;
+  ctx.clearRect(0,0,W,H);
+  var pad={t:20,b:30,l:10,r:10};
+  var bW=(W-pad.l-pad.r)/months.length;
+  // Grid lines
+  ctx.strokeStyle='rgba(0,220,180,0.06)';ctx.lineWidth=1;
+  for(var i=0;i<4;i++){var y=pad.t+(H-pad.t-pad.b)*i/3;ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(W-pad.r,y);ctx.stroke();}
+  // Bars
+  data.forEach(function(v,i){
+    var bH=(v/max)*(H-pad.t-pad.b);
+    var x=pad.l+i*bW+bW*0.15;
+    var y=H-pad.b-bH;
+    var grad=ctx.createLinearGradient(0,y,0,H-pad.b);
+    grad.addColorStop(0,'rgba(0,220,180,0.8)');
+    grad.addColorStop(1,'rgba(0,180,224,0.3)');
+    ctx.fillStyle=grad;
+    ctx.fillRect(x,y,bW*0.7,bH);
+    ctx.fillStyle='rgba(90,122,138,0.8)';
+    ctx.font='9px Rajdhani,sans-serif';
+    ctx.textAlign='center';
+    ctx.fillText(months[i],x+bW*0.35,H-pad.b+14);
+    ctx.fillStyle='rgba(0,220,180,0.9)';
+    ctx.fillText(Math.round(v)+'K',x+bW*0.35,y-5);
+  });
+}
+
+// ═══════════════════════════════════════════
+//  NAVIGATION
+// ═══════════════════════════════════════════
+document.querySelectorAll('.sb-item[data-page]').forEach(function(el){
+  el.addEventListener('click',function(){switchPage(this.dataset.page);});
+});
+function switchPage(id){
+  document.querySelectorAll('.sb-item').forEach(function(el){el.classList.remove('active');});
+  var target=document.querySelector('.sb-item[data-page="'+id+'"]');
+  if(target) target.classList.add('active');
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
+  var pg=document.getElementById('page-'+id);
+  if(pg) pg.classList.add('active');
+  var titles={dashboard:'Overview',orders:'My Orders',completed:'Completed Orders',profile:'My Profile'};
+  document.getElementById('pageTitle').textContent=titles[id]||id;
+  document.getElementById('pagecrumb').textContent=id.charAt(0).toUpperCase()+id.slice(1);
+}
+//OPEN MARKET
+
+function openMarket(){
+  window.location.href = "marketplace.html"
+}
+
+// ═══════════════════════════════════════════
+//  CHANGE PASSWORD
+// ═══════════════════════════════════════════
+function changePassword(){
+  var user=getCurrentUser(); if(!user) return;
+  var old=document.getElementById('cpOld').value;
+  var nw=document.getElementById('cpNew').value;
+  if(old!==user.password){showToast('Current password incorrect','error');return;}
+  if(nw.length<6){showToast('New password must be 6+ characters','error');return;}
+  var users=getUsers();
+  var idx=users.findIndex(function(u){return u.email===user.email;});
+  if(idx>-1){users[idx].password=nw;saveUsers(users);localStorage.setItem(CURR_KEY,JSON.stringify(users[idx]));}
+  showToast('Password updated successfully ✓','success');
+  document.getElementById('cpOld').value='';document.getElementById('cpNew').value='';
+}
+
+// ═══════════════════════════════════════════
+//  TOAST
+// ═══════════════════════════════════════════
+function showToast(msg,type){
+  var t=document.getElementById('toastEl');
+  t.textContent=msg;t.className='toast '+(type||'info')+' show';
+  setTimeout(function(){t.classList.remove('show');},3000);
+}
+
+// Listen for storage changes (admin updates orders)
+window.addEventListener('storage',function(e){
+  if(e.key===ORDERS_KEY){
+    var user=getCurrentUser();
+    if(user){renderOrders();renderCompleted();loadUserDashboard(user);}
+  }
+});
+
+  //=====================
+  // AI ASSISTANCE 
+  //=====================
+  var CURR_KEY   = 'ps_current_user';
+var ORDERS_KEY = 'ps_orders';
+var PRODUCTS_KEY = 'ps_products';
+var ELEC_KEY   = 'ps_electricity_payments';
+var USERS_KEY  = 'ps_users';
+var NOTIFS_KEY = 'ps_admin_notifs';
+
+// ── STATE ───────────────────────────────────────────────────
+var panelOpen    = false;
+var chatHistory  = [];
+var isTyping     = false;
+var recognition  = null;
+var synthesis    = window.speechSynthesis;
+var isListening  = false;
+var isSpeaking   = false;
+var unreadNotifs = 0;
+
+// ── SIMULATED POWER DATA (real data from localStorage) ──────
+var powerData = {
+  todayKwh:    parseFloat((Math.random() * 5 + 2).toFixed(1)),
+  monthKwh:    Math.floor(Math.random() * 80 + 100),
+  unitsLeft:   Math.floor(Math.random() * 40 + 40),
+  peakHour:    '18:00',
+  dailyAvg:    3.8,
+  appliances: [
+    { name: 'Refrigerator',  pct: 85, kwh: '3.2', color: '' },
+    { name: 'Lighting',      pct: 55, kwh: '2.1', color: '' },
+    { name: 'Water Heater',  pct: 70, kwh: '2.7', color: 'yellow' },
+    { name: 'TV / Screen',   pct: 35, kwh: '1.3', color: '' },
+    { name: 'Phone Charging',pct: 10, kwh: '0.4', color: '' },
+  ]
+};
+
+// ── INIT ────────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', function() {
+  initDashboard();
+  loadNotifications();
+  loadTransactions();
+  setupSpeechRecognition();
+  addWelcomeMessage();
+  updateNotifBadge();
+
+  // Watch for new products from admin
+  window.addEventListener('storage', function(e) {
+    if (e.key === PRODUCTS_KEY) checkNewProducts(e.oldValue, e.newValue);
+    if (e.key === ORDERS_KEY)   loadTransactions();
+    if (e.key === ELEC_KEY)     loadTransactions();
+    if (e.key === NOTIFS_KEY)   loadNotifications();
+  });
+
+  // Auto-watch every 30s
+  setInterval(function() {
+    loadNotifications();
+    loadTransactions();
+    simulateLiveData();
+  }, 30000);
+});
+
+function getUser() { return JSON.parse(localStorage.getItem(CURR_KEY) || 'null'); }
+function getOrders() { return JSON.parse(localStorage.getItem(ORDERS_KEY) || '[]'); }
+function getProducts() { return JSON.parse(localStorage.getItem(PRODUCTS_KEY) || '[]'); }
+function getElecPayments() { return JSON.parse(localStorage.getItem(ELEC_KEY) || '[]'); }
+
+function simulateLiveData() {
+  powerData.todayKwh = parseFloat((powerData.todayKwh + Math.random() * 0.15).toFixed(2));
+  document.getElementById('smToday').textContent = powerData.todayKwh + ' kWh';
+  updateGauge(Math.min((powerData.monthKwh / 200) * 100, 100));
+}
+
+// ── PANEL TOGGLE ────────────────────────────────────────────
+function togglePanel() {
+  panelOpen = !panelOpen;
+  document.getElementById('aiPanel').classList.toggle('open', panelOpen);
+  document.getElementById('aiTrigger').classList.toggle('open', panelOpen);
+  document.getElementById('triggerIcon').textContent = panelOpen ? '✕' : '⚡';
+  if (panelOpen) {
+    unreadNotifs = 0;
+    updateNotifBadge();
+    setTimeout(function(){ document.getElementById('chatInput').focus(); }, 400);
+  }
+}
+
+function updateNotifBadge() {
+  var badge = document.getElementById('notifBadge');
+  var notifs = JSON.parse(localStorage.getItem(NOTIFS_KEY) || '[]');
+  var count  = notifs.length;
+  if (count > 0 && !panelOpen) {
+    badge.style.display = 'flex';
+    badge.textContent = count > 9 ? '9+' : count;
+    document.getElementById('alertCount').textContent = count > 0 ? '(' + count + ')' : '';
+  } else {
+    badge.style.display = 'none';
+  }
+}
+
+// ── TAB SYSTEM ───────────────────────────────────────────────
+function switchTab(id, el) {
+  document.querySelectorAll('.qtab').forEach(function(t){ t.classList.remove('active'); });
+  document.querySelectorAll('.tab-panel').forEach(function(p){ p.classList.remove('active'); });
+  el.classList.add('active');
+  document.getElementById('tab-' + id).classList.add('active');
+}
+
+// ── DASHBOARD ───────────────────────────────────────────────
+function initDashboard() {
+  var user = getUser();
+  updateGauge((powerData.monthKwh / 200) * 100);
+  document.getElementById('gaugeKwh').textContent = powerData.monthKwh + ' kWh';
+  document.getElementById('smToday').textContent  = powerData.todayKwh + ' kWh';
+  document.getElementById('smBill').textContent   = 'Ksh ' + Math.floor(powerData.monthKwh * 18).toLocaleString();
+  document.getElementById('smUnits').textContent  = powerData.unitsLeft;
+  document.getElementById('smBillC').textContent  = 'Ksh ' + Math.floor(powerData.monthKwh * 20).toLocaleString() + ' projected';
+
+  // Usage bars
+  var barsHtml = '';
+  powerData.appliances.forEach(function(a) {
+    barsHtml += '<div class="usage-bar-item"><div class="ub-header"><span class="ub-label">' + a.name + '</span><span class="ub-val">' + a.kwh + ' kWh/day</span></div><div class="ub-track"><div class="ub-fill ' + (a.color||'') + '" style="width:0%" data-target="' + a.pct + '%"></div></div></div>';
+  });
+  document.getElementById('usageBars').innerHTML = barsHtml;
+  setTimeout(function(){
+    document.querySelectorAll('.ub-fill').forEach(function(b){ b.style.width = b.dataset.target; });
+  }, 400);
+
+  // Recommendations
+  var recs = generateRecommendations();
+  var recsHtml = recs.map(function(r) {
+    return '<div class="rec-card ' + (r.type||'') + '"><div class="rc-title">' + r.icon + ' ' + r.title + '</div><div class="rc-body">' + r.body + '</div>' + (r.save ? '<div class="rc-save">💰 Est. saving: ' + r.save + '</div>' : '') + '</div>';
+  }).join('');
+  document.getElementById('recCards').innerHTML = recsHtml;
+}
+
+function updateGauge(pct) {
+  pct = Math.min(Math.max(pct, 0), 100);
+  var dashoffset = 220 - (220 * pct / 100);
+  document.getElementById('gaugeFill').style.strokeDashoffset = dashoffset;
+  document.getElementById('gaugeText').textContent = Math.round(pct) + '%';
+}
+
+function generateRecommendations() {
+  var recs = [
+    { icon:'💡', title:'Switch to LED Bulbs', body:'Your lighting usage is above average. Switching to LED bulbs across all rooms could reduce lighting consumption by up to 80%.', save:'Ksh 340/month', type:'warn' },
+    { icon:'🌙', title:'Off-Peak Charging', body:'Charge phones, tablets and laptops between 10pm–6am when grid demand and tariffs are at their lowest. Automatic timers make this effortless.', save:'Ksh 180/month', type:'' },
+    { icon:'🧊', title:'Refrigerator Efficiency', body:'Your fridge runs constantly and is your top energy consumer. Keep it at 4°C, ensure door seals are tight, and keep it away from direct sunlight.', save:'Ksh 220/month', type:'' },
+    { icon:'⚠️', title:'High Usage Alert', body:'Your daily average of ' + powerData.todayKwh + ' kWh is ' + Math.round(((powerData.todayKwh - powerData.dailyAvg)/powerData.dailyAvg)*100) + '% above your historical average. Check for any appliances left running.', save:null, type:'alert' },
+    { icon:'📊', title:'Best Time to Use Heavy Appliances', body:'Schedule washing machines, microwaves, and irons for off-peak hours (10am–2pm or after 10pm) to spread grid load and potentially qualify for lower tariffs.', save:'Ksh 150/month', type:'' },
+  ];
+  return recs;
+}
+
+// ── NOTIFICATIONS ────────────────────────────────────────────
+function loadNotifications() {
+  var notifs = JSON.parse(localStorage.getItem(NOTIFS_KEY) || '[]');
+  var products = getProducts();
+  var user = getUser();
+
+  var items = [];
+
+  // New products
+  products.slice(0, 3).forEach(function(p) {
+    items.push({ icon:'🛒', title:'New Product: ' + p.name, body:'Available in the marketplace for Ksh ' + Number(p.price).toLocaleString() + '. Category: ' + (p.category||'General') + '.', time:'Just posted', type:'product unread', id:'prod-'+p.id });
+  });
+
+  // System notifs from admin
+  notifs.slice(0, 5).forEach(function(n) {
+    items.push({ icon: n.type==='new_user'?'👤':n.type==='new_admin'?'⚙':'🔔', title: n.message, body:'', time: n.time ? new Date(n.time).toLocaleTimeString() : 'Recently', type:'unread', id:'notif-'+Math.random() });
+  });
+
+  // Power alerts
+  if (powerData.unitsLeft < 20) {
+    items.unshift({ icon:'⚡', title:'Low Units Alert!', body:'You have only ' + powerData.unitsLeft + ' units remaining. Consider topping up to avoid disconnection.', time:'Now', type:'alert unread', id:'low-units' });
+  }
+
+  if (!items.length) {
+    document.getElementById('notifList').innerHTML = '<div style="text-align:center;padding:3rem 1rem;color:var(--muted);font-family:\'DM Mono\',monospace;font-size:0.72rem;">No notifications yet</div>';
+    return;
+  }
+
+  unreadNotifs = items.filter(function(i){ return i.type.includes('unread'); }).length;
+  document.getElementById('alertCount').textContent = unreadNotifs > 0 ? '(' + unreadNotifs + ')' : '';
+
+  document.getElementById('notifList').innerHTML = items.map(function(n) {
+    return '<div class="notif-item ' + n.type + '" onclick="handleNotifClick(\'' + n.id + '\')">' +
+      '<div class="ni-icon">' + n.icon + '</div>' +
+      '<div><div class="ni-title">' + n.title + '</div>' +
+      (n.body ? '<div class="ni-body">' + n.body + '</div>' : '') +
+      '<div class="ni-time">' + n.time + '</div></div></div>';
+  }).join('');
+
+  updateNotifBadge();
+}
+
+function handleNotifClick(id) {
+  if (id.startsWith('prod-')) switchTab('txns', document.querySelectorAll('.qtab')[3]);
+}
+
+function checkNewProducts(oldVal, newVal) {
+  var old = JSON.parse(oldVal || '[]');
+  var nw  = JSON.parse(newVal || '[]');
+  if (nw.length > old.length) {
+    var newest = nw[0];
+    addSystemMessage('🛒 **New product posted!** The admin just added **' + newest.name + '** to the marketplace for Ksh ' + Number(newest.price).toLocaleString() + '. Visit the marketplace to order!');
+    speakText('Hey! A new product just appeared in the marketplace. ' + newest.name + ' is now available for ' + Number(newest.price).toLocaleString() + ' Kenyan shillings.');
+    loadNotifications();
+    if (!panelOpen) { updateNotifBadge(); }
+  }
+}
+
+// ── TRANSACTIONS ─────────────────────────────────────────────
+function loadTransactions() {
+  var user = getUser();
+  var email = user ? user.email : null;
+  var allOrders = getOrders().filter(function(o){ return !email || o.userId === email; });
+  var elecPayments = getElecPayments().filter(function(p){ return !email || p.userId === email; });
+
+  // Market orders
+  if (!allOrders.length) {
+    document.getElementById('txnList').innerHTML = '<div style="text-align:center;padding:1.5rem;color:var(--muted);font-family:\'DM Mono\',monospace;font-size:0.7rem;">No orders yet</div>';
+  } else {
+    document.getElementById('txnList').innerHTML = allOrders.slice(0,6).map(function(o) {
+      var statusColor = o.status==='delivered'?'var(--green)':o.status==='cancelled'?'var(--red)':'var(--yellow)';
+      return '<div class="txn-item"><div class="txn-icon">' + (o.emoji||'📦') + '</div><div><div class="txn-name">' + o.product + '</div><div class="txn-sub">' + o.date + ' · <span style="color:' + statusColor + '">' + o.status + '</span></div></div><div class="txn-amount debit">−Ksh ' + Number(o.price*o.qty).toLocaleString() + '</div></div>';
+    }).join('');
+  }
+
+  // Electricity payments
+  if (!elecPayments.length) {
+    document.getElementById('elecTxnList').innerHTML = '<div style="text-align:center;padding:1.5rem;color:var(--muted);font-family:\'DM Mono\',monospace;font-size:0.7rem;">No electricity payments yet</div>';
+  } else {
+    document.getElementById('elecTxnList').innerHTML = elecPayments.slice(0,5).map(function(p) {
+      return '<div class="txn-item"><div class="txn-icon">⚡</div><div><div class="txn-name">Electricity Top-Up · ' + p.units.toFixed(1) + ' kWh</div><div class="txn-sub">' + new Date(p.date).toLocaleDateString() + ' · ' + p.method + ' · <span style="color:var(--green)">' + p.status + '</span></div></div><div class="txn-amount debit">−Ksh ' + Number(p.amount).toLocaleString() + '</div></div>';
+    }).join('');
+  }
+}
+
+// ── WELCOME MESSAGE ──────────────────────────────────────────
+function addWelcomeMessage() {
+  var user = getUser();
+  var name = user ? user.firstName : 'there';
+  var orders = getOrders().length;
+  var products = getProducts().length;
+
+  var welcome = 'Hello ' + name + '! ⚡ I\'m **VOLT**, your PowerSupply AI assistant.\n\n' +
+    'I can help you with:\n' +
+    '• 📊 **Power usage** — today, this month, and trends\n' +
+    '• 🛒 **New products** — ' + products + ' item(s) currently in the marketplace\n' +
+    '• 📦 **Your orders** — ' + orders + ' order(s) tracked\n' +
+    '• 💡 **Recommendations** — personalized energy-saving tips\n' +
+    '• 🔌 **Meter status** — connection, units, and billing\n\n' +
+    'You can type or **click the mic** 🎤 to speak to me. What would you like to know?';
+
+  addMessage('ai', welcome);
+
+}
+
+// ── CHAT ─────────────────────────────────────────────────────
+function addMessage(role, text) {
+  var user = getUser();
+  var initials = user ? ((user.firstName||'U')[0] + (user.lastName||'U')[0]).toUpperCase() : 'ME';
+  var container = document.getElementById('messages');
+  var time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  var isAI = role === 'ai';
+
+  var div = document.createElement('div');
+  div.className = 'msg ' + role;
+  div.innerHTML =
+    '<div class="msg-av">' + (isAI ? '⚡' : initials) + '</div>' +
+    '<div class="msg-content">' +
+      '<div class="msg-bubble">' + formatMessage(text) + '</div>' +
+      '<div class="msg-meta">' + (isAI ? 'VOLT AI' : 'You') + ' · ' + time + '</div>' +
+    '</div>';
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+
+  // Store in history
+  chatHistory.push({ role: isAI ? 'assistant' : 'user', content: text });
+}
+
+function addSystemMessage(text) {
+  if (!panelOpen) return;
+  addMessage('ai', text);
+}
+
+function formatMessage(text) {
+  // Basic markdown-like formatting
+  return text
+    .replace(/\*\*(.*?)\*\*/g, '<strong style="color:var(--teal)">$1</strong>')
+    .replace(/\*(.*?)\*/g, '<em>$1</em>')
+    .replace(/\n/g, '<br>');
+}
+
+function showTyping() {
+  var container = document.getElementById('messages');
+  var div = document.createElement('div');
+  div.className = 'msg ai'; div.id = 'typingIndicator';
+  div.innerHTML = '<div class="msg-av">⚡</div><div class="msg-content"><div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div></div>';
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+}
+
+function hideTyping() {
+  var t = document.getElementById('typingIndicator');
+  if (t) t.remove();
+}
+
+function quickPrompt(text) {
+  document.getElementById('chatInput').value = text;
+  sendMessage();
+}
+
+// ── SEND MESSAGE → CLAUDE API ─────────────────────────────────
+async function sendMessage() {
+  var input = document.getElementById('chatInput');
+  var text = input.value.trim();
+  if (!text || isTyping) return;
+
+  input.value = '';
+  input.style.height = 'auto';
+  addMessage('user', text);
+  isTyping = true;
+  document.getElementById('sendBtn').disabled = true;
+  showTyping();
+
+  try {
+    var systemPrompt = buildSystemPrompt();
+    var response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer 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'
+      },
+      body: JSON.stringify({
+        model: 'llama-3.3-70b-versatile',
+        messages: [
+          { role: 'system', content: systemPrompt },
+          ...chatHistory.slice(-8),
+          { role: 'user', content: text }
+        ],
+        temperature: 0.7,
+        max_tokens: 1000
+      })
+    });
+
+    var data = await response.json();
+    hideTyping();
+
+    if (data.choices && data.choices[0]) {
+      var reply = data.choices[0].message.content;
+      addMessage('ai', reply);
+      speakText(reply.replace(/\*\*(.*?)\*\*/g, '$1').replace(/\*(.*?)\*/g, '$1').replace(/<br>/g,' ').replace(/•/g,'').substring(0, 250));
+    } else {
+      addMessage('ai', '⚠️ Sorry, I couldn\'t get a response right now. Please try again.');
+    }
+  } catch (err) {
+    hideTyping();
+    addMessage('ai', '⚠️ Connection error. Please check your internet and try again.\n\nError: ' + err.message);
+  }
+
+  isTyping = false;
+  document.getElementById('sendBtn').disabled = false;
+}
+
+function buildSystemPrompt() {
+  var user = getUser();
+  var orders = getOrders();
+  var products = getProducts();
+  var elecPayments = getElecPayments();
+  var name = user ? user.firstName + ' ' + (user.lastName||'') : 'Guest';
+  var meter = user ? (user.meter || 'MTR-N/A') : 'Unknown';
+  var userOrders = user ? orders.filter(function(o){ return o.userId===user.email; }) : [];
+  var userElec = user ? elecPayments.filter(function(p){ return p.userId===user.email; }) : [];
+  var totalSpent = userOrders.reduce(function(s,o){return s+o.price*o.qty;},0);
+  var elecSpent = userElec.reduce(function(s,p){return s+p.amount;},0);
+  var pendingOrders = userOrders.filter(function(o){return o.status!=='delivered'&&o.status!=='cancelled';}).length;
+  var deliveredOrders = userOrders.filter(function(o){return o.status==='delivered';}).length;
+
+  return `You are VOLT, an intelligent AI assistant built into the PowerSupply energy management system in Kenya. You are sophisticated, professional, friendly, and highly knowledgeable about electricity, energy management, and the PowerSupply platform.
+
+CURRENT USER CONTEXT:
+- Name: ${name}
+- Meter Number: ${meter}
+- Total Orders: ${userOrders.length} (${deliveredOrders} delivered, ${pendingOrders} pending)
+- Total Spent on Marketplace: Ksh ${totalSpent.toLocaleString()}
+- Electricity Payments: ${userElec.length} payments, Ksh ${elecSpent.toLocaleString()} total
+
+LIVE POWER DATA:
+- Today's Usage: ${powerData.todayKwh} kWh (daily average: ${powerData.dailyAvg} kWh)
+- This Month: ${powerData.monthKwh} kWh used
+- Units Remaining: ${powerData.unitsLeft} kWh
+- Estimated Bill: Ksh ${Math.floor(powerData.monthKwh * 18).toLocaleString()}
+- Peak Usage Hour: ${powerData.peakHour}
+- Top Appliance: Refrigerator (3.2 kWh/day)
+
+MARKETPLACE:
+- Products Available: ${products.length}
+${products.slice(0,5).map(function(p){return '  • '+p.name+' — Ksh '+Number(p.price).toLocaleString()+' ('+p.category+')'}).join('\n')}
+
+RECENT ORDERS:
+${userOrders.slice(0,4).map(function(o){return '  • '+o.id+': '+o.product+' — Ksh '+Number(o.price).toLocaleString()+' ['+o.status+']'}).join('\n') || '  No orders yet'}
+
+ELECTRICITY PAYMENTS:
+${userElec.slice(0,3).map(function(p){return '  • '+new Date(p.date).toLocaleDateString()+': Ksh '+Number(p.amount).toLocaleString()+' → '+p.units.toFixed(1)+' kWh ['+p.status+']'}).join('\n') || '  No electricity payments yet'}
+
+YOUR CAPABILITIES:
+1. Answer questions about power usage, billing, and meter status
+2. Track and explain orders from the marketplace
+3. Notify about new products posted by admins
+4. Give personalized, data-driven energy-saving recommendations
+5. Explain electricity bills, token codes, and WiFi meter connection
+6. Help users understand their usage patterns
+7. Provide tips on reducing electricity costs in Kenya
+
+PERSONALITY:
+- Professional but warm and conversational
+- Use specific numbers from the user's data
+- Give actionable, practical recommendations
+- Be concise but thorough
+- Format responses with bullet points and bold text for clarity
+- Always mention specific Ksh amounts and kWh numbers
+- Speak in the context of Kenya (M-Pesa, KPLC, Kenyan electricity rates ~Ksh 18/kWh)
+
+Respond naturally to the user's question using their real data above. Keep responses under 200 words unless a detailed analysis is requested.`;
+}
+
+// ── SPEECH RECOGNITION ───────────────────────────────────────
+function setupSpeechRecognition() {
+  if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+    document.getElementById('micBtn').title = 'Speech not supported in this browser';
+    document.getElementById('micBtn').style.opacity = '0.4';
+    return;
+  }
+  var SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+  recognition = new SpeechRec();
+  recognition.continuous = false;
+  recognition.interimResults = true;
+  recognition.lang = 'en-KE';
+
+  recognition.onstart = function() {
+    isListening = true;
+    document.getElementById('micBtn').classList.add('listening');
+    document.getElementById('voiceWave').classList.add('show');
+    document.getElementById('voltStatus').textContent = 'Listening…';
+  };
+
+  recognition.onresult = function(e) {
+    var transcript = '';
+    for (var i = e.resultIndex; i < e.results.length; i++) {
+      transcript += e.results[i][0].transcript;
+    }
+    document.getElementById('chatInput').value = transcript;
+  };
+
+  recognition.onend = function() {
+    isListening = false;
+    document.getElementById('micBtn').classList.remove('listening');
+    document.getElementById('voiceWave').classList.remove('show');
+    document.getElementById('voltStatus').textContent = 'PowerSupply Intelligence · Online';
+    var text = document.getElementById('chatInput').value.trim();
+    if (text) sendMessage();
+  };
+
+  recognition.onerror = function(e) {
+    isListening = false;
+    document.getElementById('micBtn').classList.remove('listening');
+    document.getElementById('voiceWave').classList.remove('show');
+    document.getElementById('voltStatus').textContent = 'Mic error: ' + e.error;
+    setTimeout(function(){ document.getElementById('voltStatus').textContent = 'PowerSupply Intelligence · Online'; }, 3000);
+  };
+}
+
+function toggleSpeech() {
+  if (!recognition) { alert('Speech recognition not supported in this browser. Try Chrome.'); return; }
+  if (isListening) {
+    recognition.stop();
+  } else {
+    recognition.start();
+  }
+}
+
+// ── TEXT TO SPEECH ───────────────────────────────────────────
+function speakText(text) {
+  if (!synthesis) return;
+  synthesis.cancel(); // Stop any current speech
+
+  // Clean text for TTS
+  var clean = text.replace(/<[^>]+>/g, '').replace(/[•\*#]/g, '').trim();
+  if (!clean) return;
+
+  var utterance = new SpeechSynthesisUtterance(clean);
+  utterance.rate = 1.0;
+  utterance.pitch = 1.0;
+  utterance.volume = 0.85;
+  utterance.lang = 'en-KE';
+
+  // Pick a good voice if available
+  var voices = synthesis.getVoices();
+  var preferred = voices.find(function(v){
+    return v.lang.includes('en') && (v.name.includes('Google') || v.name.includes('Female') || v.name.includes('Samantha'));
+  }) || voices.find(function(v){ return v.lang.includes('en'); });
+  if (preferred) utterance.voice = preferred;
+
+  utterance.onstart = function() {
+    isSpeaking = true;
+    document.getElementById('speakWave').classList.add('show');
+    document.getElementById('voltStatus').textContent = 'Speaking…';
+  };
+  utterance.onend = function() {
+    isSpeaking = false;
+    document.getElementById('speakWave').classList.remove('show');
+    document.getElementById('voltStatus').textContent = 'PowerSupply Intelligence · Online';
+  };
+
+  synthesis.speak(utterance);
+}
+
+// Load voices (needed for some browsers)
+if (synthesis) {
+  synthesis.onvoiceschanged = function() { synthesis.getVoices(); };
+}
+
+// ── CLEAR CHAT ───────────────────────────────────────────────
+function clearChat() {
+  document.getElementById('messages').innerHTML = '';
+  chatHistory = [];
+  addWelcomeMessage();
+}
+
+</script>
+</body>
+</html>
